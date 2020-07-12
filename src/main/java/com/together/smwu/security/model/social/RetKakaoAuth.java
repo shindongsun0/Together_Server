@@ -1,4 +1,4 @@
-package com.together.smwu.model.social;
+package com.together.smwu.security.model.social;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

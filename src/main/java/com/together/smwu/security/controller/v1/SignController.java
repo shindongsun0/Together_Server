@@ -1,15 +1,15 @@
-package com.together.smwu.controller.v1;
+package com.together.smwu.security.controller.v1;
 
 import com.together.smwu.advice.exception.CUserExistException;
 import com.together.smwu.advice.exception.CUserNotFoundException;
 import com.together.smwu.config.security.JwtTokenProvider;
-import com.together.smwu.entity.User;
-import com.together.smwu.model.response.CommonResult;
-import com.together.smwu.model.response.SingleResult;
-import com.together.smwu.model.social.KakaoProfile;
-import com.together.smwu.repository.UserJpaRepo;
-import com.together.smwu.service.ResponseService;
-import com.together.smwu.service.social.KakaoService;
+import com.together.smwu.security.entity.User;
+import com.together.smwu.security.model.response.CommonResult;
+import com.together.smwu.security.model.response.SingleResult;
+import com.together.smwu.security.model.social.KakaoProfile;
+import com.together.smwu.security.repository.UserJpaRepo;
+import com.together.smwu.security.service.ResponseService;
+import com.together.smwu.security.service.social.KakaoService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;

@@ -17,7 +17,7 @@ public class SwaggerConfig {
     public Docket api() {
         return new Docket (DocumentationType.SWAGGER_2)
                 .select()
-                .apis(RequestHandlerSelectors.basePackage("com.together.smwu.controller"))
+                .apis(RequestHandlerSelectors.basePackage("com.together.smwu.security.controller"))
                 .paths(PathSelectors.any())
                 .build();
     }

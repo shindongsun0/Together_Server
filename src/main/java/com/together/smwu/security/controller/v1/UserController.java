@@ -1,12 +1,12 @@
-package com.together.smwu.controller.v1;
+package com.together.smwu.security.controller.v1;
 
 import com.together.smwu.advice.exception.CUserNotFoundException;
-import com.together.smwu.entity.User;
-import com.together.smwu.model.response.CommonResult;
-import com.together.smwu.model.response.ListResult;
-import com.together.smwu.model.response.SingleResult;
-import com.together.smwu.repository.UserJpaRepo;
-import com.together.smwu.service.ResponseService;
+import com.together.smwu.security.entity.User;
+import com.together.smwu.security.model.response.CommonResult;
+import com.together.smwu.security.model.response.ListResult;
+import com.together.smwu.security.model.response.SingleResult;
+import com.together.smwu.security.repository.UserJpaRepo;
+import com.together.smwu.security.service.ResponseService;
 import io.swagger.annotations.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;

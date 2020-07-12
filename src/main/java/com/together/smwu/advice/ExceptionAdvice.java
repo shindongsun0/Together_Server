@@ -4,8 +4,8 @@ import com.together.smwu.advice.exception.CAuthenticationEntryPointException;
 import com.together.smwu.advice.exception.CCommunicationException;
 import com.together.smwu.advice.exception.CUserExistException;
 import com.together.smwu.advice.exception.CUserNotFoundException;
-import com.together.smwu.model.response.CommonResult;
-import com.together.smwu.service.ResponseService;
+import com.together.smwu.security.model.response.CommonResult;
+import com.together.smwu.security.service.ResponseService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
@@ -54,25 +54,25 @@ public class ExceptionAdvice {
     @ExceptionHandler(CAuthenticationEntryPointException.class)
     @ResponseStatus(HttpStatus.UNAUTHORIZED)
     protected CommonResult authenticationEntryPointException(HttpServletRequest request, CAuthenticationEntryPointException e){
-        return responseService.getFailResult(Integer.valueOf(getMessage("entryPointException.code")), getMessage("entryPointException.msg"));
+        return responseService.getFailResult(Integer.parseInt(getMessage("entryPointException.code")), getMessage("entryPointException.msg"));
     }
 
     @ExceptionHandler(AccessDeniedException.class)
     @ResponseStatus(HttpStatus.UNAUTHORIZED)
     public CommonResult accessDeniedException(HttpServletRequest request, AccessDeniedException e) {
-        return responseService.getFailResult(Integer.valueOf(getMessage("accessDenied.code")), getMessage("accessDenied.msg"));
+        return responseService.getFailResult(Integer.parseInt(getMessage("accessDenied.code")), getMessage("accessDenied.msg"));
     }
 
     @ExceptionHandler(CCommunicationException.class)
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     public CommonResult communicationException(HttpServletRequest request, CCommunicationException e) {
-        return responseService.getFailResult(Integer.valueOf(getMessage("communicationError.code")), getMessage("communicationError.msg"));
+        return responseService.getFailResult(Integer.parseInt(getMessage("communicationError.code")), getMessage("communicationError.msg"));
     }
 
     @ExceptionHandler(CUserExistException.class)
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     public CommonResult communicationException(HttpServletRequest request, CUserExistException e) {
-        return responseService.getFailResult(Integer.valueOf(getMessage("existingUser.code")), getMessage("existingUser.msg"));
+        return responseService.getFailResult(Integer.parseInt(getMessage("existingUser.code")), getMessage("existingUser.msg"));
     }
 
     // code정보에 해당하는 메시지를 조회합니다.

@@ -1,7 +1,7 @@
-package com.together.smwu.service.security;
+package com.together.smwu.security.service.security;
 
 import com.together.smwu.advice.exception.CUserNotFoundException;
-import com.together.smwu.repository.UserJpaRepo;
+import com.together.smwu.security.repository.UserJpaRepo;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
