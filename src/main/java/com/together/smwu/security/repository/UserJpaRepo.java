@@ -1,6 +1,6 @@
-package com.together.smwu.repository;
+package com.together.smwu.security.repository;
 
-import com.together.smwu.entity.User;
+import com.together.smwu.security.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;

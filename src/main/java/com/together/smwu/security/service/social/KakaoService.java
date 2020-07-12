@@ -1,9 +1,9 @@
-package com.together.smwu.service.social;
+package com.together.smwu.security.service.social;
 
 import com.google.gson.Gson;
 import com.together.smwu.advice.exception.CCommunicationException;
-import com.together.smwu.model.social.KakaoProfile;
-import com.together.smwu.model.social.RetKakaoAuth;
+import com.together.smwu.security.model.social.KakaoProfile;
+import com.together.smwu.security.model.social.RetKakaoAuth;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.env.Environment;

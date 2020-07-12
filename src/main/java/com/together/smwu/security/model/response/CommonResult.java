@@ -1,4 +1,4 @@
-package com.together.smwu.model.response;
+package com.together.smwu.security.model.response;
 
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;

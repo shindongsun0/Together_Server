@@ -1,4 +1,4 @@
-package com.together.smwu.model.response;
+package com.together.smwu.security.model.response;
 
 import lombok.Getter;
 import lombok.Setter;

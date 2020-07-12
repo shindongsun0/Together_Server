@@ -1,7 +1,7 @@
-package com.together.smwu.controller.exception;
+package com.together.smwu.security.controller.exception;
 
 import com.together.smwu.advice.exception.CAuthenticationEntryPointException;
-import com.together.smwu.model.response.CommonResult;
+import com.together.smwu.security.model.response.CommonResult;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.web.bind.annotation.GetMapping;
