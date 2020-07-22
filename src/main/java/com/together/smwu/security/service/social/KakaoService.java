@@ -37,15 +37,13 @@ public class KakaoService{
     private String kakaoLogoutUrl;
 
     public KakaoProfile getKakaoProfile(String accessToken){
-        //헤더에 accessToken껴넣기
+
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
         headers.set("Authorization", "Bearer " + accessToken);
 
-        //set http entity
         HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<>(null, headers);
         try{
-            //profile 요청
             ResponseEntity<String> response = restTemplate.postForEntity(Objects.requireNonNull(env.getProperty("spring.social.kakao.url.profile")), request, String.class);
             if(response.getStatusCode() == HttpStatus.OK) {
                 return gson.fromJson(response.getBody(), KakaoProfile.class);
@@ -60,14 +58,12 @@ public class KakaoService{
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
 
-        //SET PARAMETER
         MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
         params.add("grant_type", "authorization_code");
         params.add("client_id", kakaoClientId);
         params.add("redirect_uri", baseUrl + kakaoRedirect);
         params.add("code", code);
 
-        //set http entity
         HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<>(params, headers);
         ResponseEntity<String> response = restTemplate.postForEntity(Objects.requireNonNull(env.getProperty("spring.social.kakao.url.token")), request, String.class);
         if(response.getStatusCode() == HttpStatus.OK){

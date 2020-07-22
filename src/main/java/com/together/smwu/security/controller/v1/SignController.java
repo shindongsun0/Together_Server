@@ -4,6 +4,7 @@ import com.together.smwu.advice.exception.CUserExistException;
 import com.together.smwu.advice.exception.CUserNotFoundException;
 import com.together.smwu.config.security.JwtTokenProvider;
 import com.together.smwu.security.entity.User;
+import com.together.smwu.security.model.request.SocialRequest;
 import com.together.smwu.security.model.response.CommonResult;
 import com.together.smwu.security.model.response.SingleResult;
 import com.together.smwu.security.model.social.KakaoProfile;
@@ -33,29 +34,38 @@ public class SignController {
     @ApiOperation(value = "소셜 로그인", notes = "소셜 회원 로그인을 한다.")
     @PostMapping(value = "/signin/{provider}")
     public SingleResult<String> signinByProvider(
-            @ApiParam(value = "서비스 제공자 provider", required = true, defaultValue = "kakao") @PathVariable String provider,
-            @ApiParam(value = "소셜 access_token", required = true) @RequestParam String accessToken) {
-
-        KakaoProfile kakaoProfile = kakaoService.getKakaoProfile(accessToken);
-        User user = userJpaRepo.findByUidAndProvider(String.valueOf(kakaoProfile.getId()), provider).orElseThrow(CUserNotFoundException::new);
+            @ApiParam(value = "SocialRequest.Login", required = true)
+            @RequestBody SocialRequest.SignIn signIn)
+//            @ApiParam(value = "서비스 제공자 provider", required = true, defaultValue = "kakao")
+//            @PathVariable String provider,
+//            @ApiParam(value = "소셜 access_token", required = true)
+//            @RequestParam String accessToken)
+    {
+        KakaoProfile kakaoProfile = kakaoService.getKakaoProfile(signIn.getAccessToken());
+        User user = userJpaRepo.findByUidAndProvider(String.valueOf(kakaoProfile.getId()), signIn.getProvider())
+                .orElseThrow(CUserNotFoundException::new);
         return responseService.getSingleResult(jwtTokenProvider.createToken(String.valueOf(user.getMsrl()), user.getRoles()));
     }
 
     @ApiOperation(value = "소셜 계정 가입", notes = "소셜 계정 회원가입을 한다.")
     @PostMapping(value = "/signup/{provider}")
-    public CommonResult signupProvider(@ApiParam(value = "서비스 제공자 provider", required = true, defaultValue = "kakao") @PathVariable String provider,
-                                       @ApiParam(value = "소셜 access_token", required = true) @RequestParam String accessToken,
-                                       @ApiParam(value = "이름", required = true) @RequestParam String name){
+    public CommonResult signupProvider(
+            @ApiParam(value = "SocialRequest.SignUp", required = true)
+            @RequestBody SocialRequest.SignUp signUp
+//            @ApiParam(value = "서비스 제공자 provider", required = true, defaultValue = "kakao") @PathVariable String provider,
+//                                       @ApiParam(value = "소셜 access_token", required = true) @RequestParam String accessToken,
+//                                       @ApiParam(value = "이름", required = true) @RequestParam String name
+    ) {
 
-        KakaoProfile kakaoProfile = kakaoService.getKakaoProfile(accessToken);
-        Optional<User> user = userJpaRepo.findByUidAndProvider(String.valueOf(kakaoProfile.getId()), provider);
-        if(user.isPresent())
+        KakaoProfile kakaoProfile = kakaoService.getKakaoProfile(signUp.getAccessToken());
+        Optional<User> user = userJpaRepo.findByUidAndProvider(String.valueOf(kakaoProfile.getId()), signUp.getProvider());
+        if (user.isPresent())
             throw new CUserExistException();
 
         User inUser = User.builder()
                 .uid(String.valueOf(kakaoProfile.getId()))
-                .provider(provider)
-                .name(name)
+                .provider(signUp.getProvider())
+                .name(signUp.getName())
                 .roles(Collections.singletonList("ROLE_USER"))
                 .build();
 

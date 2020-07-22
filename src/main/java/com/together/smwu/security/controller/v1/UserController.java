@@ -2,6 +2,7 @@ package com.together.smwu.security.controller.v1;
 
 import com.together.smwu.advice.exception.CUserNotFoundException;
 import com.together.smwu.security.entity.User;
+import com.together.smwu.security.model.request.UserRequest;
 import com.together.smwu.security.model.response.CommonResult;
 import com.together.smwu.security.model.response.ListResult;
 import com.together.smwu.security.model.response.SingleResult;
@@ -48,11 +49,14 @@ public class UserController {
     @ApiOperation(value = "회원 수정", notes = "회원 정보를 수정한다")
     @PutMapping(value = "/user")
     public SingleResult<User> modify(
-            @ApiParam(value = "회원번호", required = true) @RequestParam int msrl,
-            @ApiParam(value = "회원이름", required = true) @RequestParam String name) {
+            @ApiParam(value = "UserRequest.Modify", required = true)
+            @RequestBody UserRequest.Modify modify
+//            @ApiParam(value = "회원번호", required = true) @RequestParam int msrl,
+//            @ApiParam(value = "회원이름", required = true) @RequestParam String name
+    ) {
         User user = User.builder()
-                .msrl(msrl)
-                .name(name)
+                .msrl(modify.getMsrl())
+                .name(modify.getName())
                 .build();
         return responseService.getSingleResult(userJpaRepo.save(user));
     }
