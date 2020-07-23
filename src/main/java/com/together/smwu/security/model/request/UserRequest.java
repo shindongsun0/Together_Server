@@ -8,7 +8,6 @@ public class UserRequest {
     @Getter
     @AllArgsConstructor
     public static class Modify{
-        private int msrl;
         private String name;
     }
 

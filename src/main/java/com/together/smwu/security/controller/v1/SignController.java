@@ -32,7 +32,7 @@ public class SignController {
     private final KakaoService kakaoService;
 
     @ApiOperation(value = "소셜 로그인", notes = "소셜 회원 로그인을 한다.")
-    @PostMapping(value = "/signin/{provider}")
+    @PostMapping(value = "/signin")
     public SingleResult<String> signinByProvider(
             @ApiParam(value = "SocialRequest.Login", required = true)
             @RequestBody SocialRequest.SignIn signIn)
@@ -48,7 +48,7 @@ public class SignController {
     }
 
     @ApiOperation(value = "소셜 계정 가입", notes = "소셜 계정 회원가입을 한다.")
-    @PostMapping(value = "/signup/{provider}")
+    @PostMapping(value = "/signup")
     public CommonResult signupProvider(
             @ApiParam(value = "SocialRequest.SignUp", required = true)
             @RequestBody SocialRequest.SignUp signUp

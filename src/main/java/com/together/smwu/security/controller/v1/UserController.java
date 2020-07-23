@@ -11,6 +11,8 @@ import com.together.smwu.security.service.ResponseService;
 import io.swagger.annotations.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 @PreAuthorize("hasRole('ROLE_USER')")
@@ -36,10 +38,12 @@ public class UserController {
             @ApiImplicitParam(name = "X-AUTH-TOKEN", value = "로그인 성공 후 access_token", required = true, dataType = "String", paramType = "header")
     })
     @ApiOperation(value = "회원 단건 조회", notes = "userId로 회원을 조회한다")
-    @GetMapping(value = "/user/{msrl}")
-    public SingleResult<User> findUserById(@ApiParam(value = "회원ID", required = true) @PathVariable long msrl, @ApiParam(value = "언어", defaultValue = "ko") @RequestParam String lang) {
-        // 결과데이터가 단일건인경우 getBasicResult를 이용해서 결과를 출력한다.
-        return responseService.getSingleResult(userJpaRepo.findById(msrl).orElseThrow(CUserNotFoundException::new));
+    @GetMapping(value = "/user")
+    public SingleResult<User> findUserById(){
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String id = authentication.getName();
+
+        return responseService.getSingleResult(userJpaRepo.findByUid(id).orElseThrow(CUserNotFoundException::new));
     }
 
     @ApiImplicitParams({
@@ -54,10 +58,10 @@ public class UserController {
 //            @ApiParam(value = "회원번호", required = true) @RequestParam int msrl,
 //            @ApiParam(value = "회원이름", required = true) @RequestParam String name
     ) {
-        User user = User.builder()
-                .msrl(modify.getMsrl())
-                .name(modify.getName())
-                .build();
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String id = authentication.getName();
+        User user = userJpaRepo.findByUid(id).orElseThrow(CUserNotFoundException::new);
+        user.setName(modify.getName());
         return responseService.getSingleResult(userJpaRepo.save(user));
     }
 
