@@ -23,6 +23,7 @@ import java.util.Optional;
 @Api(tags = {"1. Sign"})
 @RequiredArgsConstructor
 @RestController
+@CrossOrigin(origins = "*", allowedHeaders = "*")
 @RequestMapping(value = "/v1")
 public class SignController {
 
