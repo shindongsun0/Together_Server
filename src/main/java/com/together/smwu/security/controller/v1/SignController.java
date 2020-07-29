@@ -4,7 +4,8 @@ import com.together.smwu.advice.exception.CUserExistException;
 import com.together.smwu.advice.exception.CUserNotFoundException;
 import com.together.smwu.config.security.JwtTokenProvider;
 import com.together.smwu.security.entity.User;
-import com.together.smwu.security.model.request.SocialRequest;
+import com.together.smwu.security.model.request.SignInRequest;
+import com.together.smwu.security.model.request.SignUpRequest;
 import com.together.smwu.security.model.response.CommonResult;
 import com.together.smwu.security.model.response.SingleResult;
 import com.together.smwu.security.model.social.KakaoProfile;
@@ -23,7 +24,6 @@ import java.util.Optional;
 @Api(tags = {"1. Sign"})
 @RequiredArgsConstructor
 @RestController
-@CrossOrigin(origins = "*", allowedHeaders = "*")
 @RequestMapping(value = "/v1")
 public class SignController {
 
@@ -36,7 +36,7 @@ public class SignController {
     @PostMapping(value = "/signin")
     public SingleResult<String> signinByProvider(
             @ApiParam(value = "SocialRequest.Login", required = true)
-            @RequestBody SocialRequest.SignIn signIn)
+            @RequestBody SignInRequest signIn)
 //            @ApiParam(value = "서비스 제공자 provider", required = true, defaultValue = "kakao")
 //            @PathVariable String provider,
 //            @ApiParam(value = "소셜 access_token", required = true)
@@ -51,8 +51,8 @@ public class SignController {
     @ApiOperation(value = "소셜 계정 가입", notes = "소셜 계정 회원가입을 한다.")
     @PostMapping(value = "/signup")
     public CommonResult signupProvider(
-            @ApiParam(value = "SocialRequest.SignUp", required = true)
-            @RequestBody SocialRequest.SignUp signUp
+            @ApiParam(value = "SignUpRequest.SignUp", required = true)
+            @RequestBody SignUpRequest signUp
 //            @ApiParam(value = "서비스 제공자 provider", required = true, defaultValue = "kakao") @PathVariable String provider,
 //                                       @ApiParam(value = "소셜 access_token", required = true) @RequestParam String accessToken,
 //                                       @ApiParam(value = "이름", required = true) @RequestParam String name

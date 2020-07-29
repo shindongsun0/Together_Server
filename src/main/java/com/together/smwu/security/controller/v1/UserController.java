@@ -19,7 +19,6 @@ import org.springframework.web.bind.annotation.*;
 @Api(tags = {"2. User"})
 @RequiredArgsConstructor
 @RestController
-@CrossOrigin(origins = "*", allowedHeaders = "*")
 @RequestMapping(value = "/v1")
 public class UserController {
 
