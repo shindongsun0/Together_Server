@@ -1,13 +1,14 @@
-package com.together.smwu.security.service.security;
+package com.together.smwu.security.service;
 
 import com.together.smwu.advice.exception.CUserNotFoundException;
 import com.together.smwu.config.security.CookieUtil;
 import com.together.smwu.config.security.JwtTokenProvider;
-import com.together.smwu.security.dto.LoginResponse;
+import com.together.smwu.security.model.response.LoginResponse;
 import com.together.smwu.security.entity.User;
 import com.together.smwu.security.model.request.SignInRequest;
 import com.together.smwu.security.model.social.KakaoProfile;
 import com.together.smwu.security.repository.UserJpaRepo;
+import com.together.smwu.security.service.interfaces.UserService;
 import com.together.smwu.security.service.social.KakaoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -17,7 +18,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 @Service
-public class UserServiceImpl implements UserService{
+public class UserServiceImpl implements UserService {
 
     private UserJpaRepo userJpaRepo;
     private JwtTokenProvider jwtTokenProvider;
@@ -43,9 +44,9 @@ public class UserServiceImpl implements UserService{
 
         boolean accessTokenValid = jwtTokenProvider.validateToken(accessToken);
 
-        String newJwtToken;
+        // Valid한 토큰이 아니라면 Cookie에 새로운 토큰을 넣는다.
         if(!accessTokenValid){
-            newJwtToken = jwtTokenProvider.createToken(String.valueOf(user.getMsrl()), user.getRoles());
+            String newJwtToken = jwtTokenProvider.createToken(String.valueOf(user.getMsrl()), user.getRoles());
             CookieUtil.create(response, COOKIE_NAME, newJwtToken, false, TOKEN_VALID_MILLISECOND, "*");
         }
 

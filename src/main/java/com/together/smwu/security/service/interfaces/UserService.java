@@ -1,6 +1,6 @@
-package com.together.smwu.security.service.security;
+package com.together.smwu.security.service;
 
-import com.together.smwu.security.dto.LoginResponse;
+import com.together.smwu.security.model.response.LoginResponse;
 import com.together.smwu.security.entity.User;
 import com.together.smwu.security.model.request.SignInRequest;
 import org.springframework.http.ResponseEntity;

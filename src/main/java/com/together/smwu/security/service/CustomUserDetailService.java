@@ -1,4 +1,4 @@
-package com.together.smwu.security.service.security;
+package com.together.smwu.security.service;
 
 import com.together.smwu.advice.exception.CUserNotFoundException;
 import com.together.smwu.security.repository.UserJpaRepo;

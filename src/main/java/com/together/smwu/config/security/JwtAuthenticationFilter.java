@@ -18,7 +18,6 @@ import java.util.List;
 public class JwtAuthenticationFilter extends GenericFilterBean {
 
     private JwtTokenProvider jwtTokenProvider;
-    private static final String COOKIE_NAME = "X-AUTH-TOKEN";
 
     public JwtAuthenticationFilter(JwtTokenProvider jwtTokenProvider) {
         this.jwtTokenProvider = jwtTokenProvider;
@@ -28,7 +27,6 @@ public class JwtAuthenticationFilter extends GenericFilterBean {
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain filterChain)
             throws IOException, ServletException {
 
-        //        String token = jwtTokenProvider.resolveToken((HttpServletRequest) request);
         List<Cookie> cookies = getJwtTokenFromCookie(request);
         String token = jwtTokenProvider.resolveTokenValue(cookies, (HttpServletRequest) request);
         if (null != token && jwtTokenProvider.validateToken(token)) {

@@ -1,4 +1,4 @@
-package com.together.smwu.security.dto;
+package com.together.smwu.security.model.response;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;

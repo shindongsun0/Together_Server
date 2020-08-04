@@ -1,7 +1,7 @@
 package com.together.smwu.security.controller.v1;
 
 import com.together.smwu.advice.exception.CUserExistException;
-import com.together.smwu.security.dto.LoginResponse;
+import com.together.smwu.security.model.response.LoginResponse;
 import com.together.smwu.security.entity.User;
 import com.together.smwu.security.model.request.SignInRequest;
 import com.together.smwu.security.model.request.SignUpRequest;
@@ -9,7 +9,7 @@ import com.together.smwu.security.model.response.CommonResult;
 import com.together.smwu.security.model.social.KakaoProfile;
 import com.together.smwu.security.repository.UserJpaRepo;
 import com.together.smwu.security.service.ResponseService;
-import com.together.smwu.security.service.security.UserService;
+import com.together.smwu.security.service.interfaces.UserService;
 import com.together.smwu.security.service.social.KakaoService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -48,10 +48,10 @@ public class SignController {
     public ResponseEntity<LoginResponse> signinByProvider(
             @ApiParam(value = "SocialRequest.Login", required = true)
             @RequestBody SignInRequest signIn,
-            @CookieValue(name = "jwtToken", required = false) String jwtToken,
+            @CookieValue(name = "X-AUTH-TOKEN", required = false) String accessToken,
             HttpServletResponse httpServletResponse) {
 
-        LoginResponse loginResponse = userService.login(signIn, httpServletResponse, jwtToken);
+        LoginResponse loginResponse = userService.login(signIn, httpServletResponse, accessToken);
         return new ResponseEntity<>(loginResponse, HttpStatus.OK);
     }
 
@@ -78,6 +78,7 @@ public class SignController {
         return responseService.getSuccessResult();
     }
 
+    @ApiOperation(value = "로그아웃", notes = "로그아웃시 토큰을 만룟시킨다.")
     @GetMapping("/logout")
     public ResponseEntity.BodyBuilder logOut(HttpServletRequest request, HttpServletResponse response) {
         userService.logout(request, response);
