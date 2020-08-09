@@ -33,7 +33,7 @@ public class JwtAuthenticationFilter extends GenericFilterBean {
             Authentication auth = jwtTokenProvider.getAuthentication(token);
             SecurityContextHolder.getContext().setAuthentication(auth);
         }
-        filterChain.doFilter(request, response);
+        filterChain. doFilter(request, response);
     }
 
     private List<Cookie> getJwtTokenFromCookie(ServletRequest request) {

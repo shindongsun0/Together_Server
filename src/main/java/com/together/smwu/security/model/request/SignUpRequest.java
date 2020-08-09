@@ -9,4 +9,5 @@ public class SignUpRequest {
     private String accessToken;
     private String provider;
     private String name;
+    private String profileImage;
 }

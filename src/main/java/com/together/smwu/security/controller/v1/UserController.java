@@ -33,9 +33,6 @@ public class UserController {
         this.responseService = responseService;
     }
 
-    //    @ApiImplicitParams({
-//            @ApiImplicitParam(name = "X-AUTH-TOKEN", value = "로그인 성공 후 access_token", required = true, dataType = "String", paramType = "header")
-//    })
     @ApiOperation(value = "회원 리스트 조회", notes = "모든 회원을 조회")
     @GetMapping(value = "/users")
     public ListResult<User> findAllUser(
@@ -43,9 +40,6 @@ public class UserController {
         return responseService.getListResult(userJpaRepo.findAll());
     }
 
-//    @ApiImplicitParams({
-//            @ApiImplicitParam(name = "X-AUTH-TOKEN", value = "로그인 성공 후 access_token", required = true, dataType = "String", paramType = "header")
-//    })
     @ApiOperation(value = "회원 단건 조회", notes = "userId로 회원을 조회한다")
     @GetMapping(value = "/user")
     public SingleResult<User> findUserById(
@@ -56,10 +50,6 @@ public class UserController {
         return responseService.getSingleResult(userJpaRepo.findByUid(id).orElseThrow(CUserNotFoundException::new));
     }
 
-//    @ApiImplicitParams({
-//            @ApiImplicitParam(name = "X-AUTH-TOKEN", value = "로그인 성공 후 access_token",
-//                    required = true, dataType = "String", paramType = "header")
-//    })
     @ApiOperation(value = "회원 수정", notes = "회원 정보를 수정한다")
     @PutMapping(value = "/user")
     public SingleResult<User> modify(
@@ -73,9 +63,6 @@ public class UserController {
         return responseService.getSingleResult(userJpaRepo.save(user));
     }
 
-//    @ApiImplicitParams({
-//            @ApiImplicitParam(name = "X-AUTH-TOKEN", value = "로그인 성공 후 access_token", required = true, dataType = "String", paramType = "header")
-//    })
     @ApiOperation(value = "회원 삭제", notes = "userId로 회원정보를 삭제한다")
     @DeleteMapping(value = "/user/{msrl}")
     public CommonResult delete(

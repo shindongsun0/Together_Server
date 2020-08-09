@@ -1,12 +1,9 @@
 package com.together.smwu.security.controller.v1;
 
-import com.together.smwu.advice.exception.CUserExistException;
-import com.together.smwu.security.model.response.LoginResponse;
-import com.together.smwu.security.entity.User;
 import com.together.smwu.security.model.request.SignInRequest;
 import com.together.smwu.security.model.request.SignUpRequest;
 import com.together.smwu.security.model.response.CommonResult;
-import com.together.smwu.security.model.social.KakaoProfile;
+import com.together.smwu.security.model.response.LoginResponse;
 import com.together.smwu.security.repository.UserJpaRepo;
 import com.together.smwu.security.service.ResponseService;
 import com.together.smwu.security.service.interfaces.UserService;
@@ -21,8 +18,6 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.util.Collections;
-import java.util.Optional;
 
 @Api(tags = {"1. Sign"})
 @RestController
@@ -61,27 +56,13 @@ public class SignController {
             @ApiParam(value = "SignUpRequest.SignUp", required = true)
             @RequestBody SignUpRequest signUp
     ) {
-
-        KakaoProfile kakaoProfile = kakaoService.getKakaoProfile(signUp.getAccessToken());
-        Optional<User> user = userJpaRepo.findByUidAndProvider(String.valueOf(kakaoProfile.getId()), signUp.getProvider());
-        if (user.isPresent())
-            throw new CUserExistException();
-
-        User inUser = User.builder()
-                .uid(String.valueOf(kakaoProfile.getId()))
-                .provider(signUp.getProvider())
-                .name(signUp.getName())
-                .roles(Collections.singletonList("ROLE_USER"))
-                .build();
-
-        userJpaRepo.save(inUser);
+        userService.signUp(signUp);
         return responseService.getSuccessResult();
     }
 
-    @ApiOperation(value = "로그아웃", notes = "로그아웃시 토큰을 만룟시킨다.")
+    @ApiOperation(value = "로그아웃", notes = "로그아웃시 토큰을 만료시킨다.")
     @GetMapping("/logout")
-    public ResponseEntity.BodyBuilder logOut(HttpServletRequest request, HttpServletResponse response) {
+    public void logOut(HttpServletRequest request, HttpServletResponse response) {
         userService.logout(request, response);
-        return ResponseEntity.ok();
     }
 }

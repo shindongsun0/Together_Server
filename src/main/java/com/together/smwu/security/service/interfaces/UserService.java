@@ -1,5 +1,6 @@
-package com.together.smwu.security.service;
+package com.together.smwu.security.service.interfaces;
 
+import com.together.smwu.security.model.request.SignUpRequest;
 import com.together.smwu.security.model.response.LoginResponse;
 import com.together.smwu.security.entity.User;
 import com.together.smwu.security.model.request.SignInRequest;
@@ -17,4 +18,6 @@ public interface UserService {
     User getUser();
 
     void logout(HttpServletRequest request, HttpServletResponse response);
+
+    void signUp(SignUpRequest signUpRequest);
 }
