@@ -8,24 +8,40 @@ import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 
 public class JwtAuthenticationFilter extends GenericFilterBean {
 
     private JwtTokenProvider jwtTokenProvider;
 
-    public JwtAuthenticationFilter(JwtTokenProvider jwtTokenProvider){
+    public JwtAuthenticationFilter(JwtTokenProvider jwtTokenProvider) {
         this.jwtTokenProvider = jwtTokenProvider;
     }
+
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain filterChain)
             throws IOException, ServletException {
-        String token = jwtTokenProvider.resolveToken((HttpServletRequest) request);
-        if(token != null && jwtTokenProvider.validateToken(token)){
+
+        List<Cookie> cookies = getJwtTokenFromCookie(request);
+        String token = jwtTokenProvider.resolveTokenValue(cookies, (HttpServletRequest) request);
+        if (null != token && jwtTokenProvider.validateToken(token)) {
             Authentication auth = jwtTokenProvider.getAuthentication(token);
             SecurityContextHolder.getContext().setAuthentication(auth);
         }
-        filterChain.doFilter(request, response);
+        filterChain. doFilter(request, response);
+    }
+
+    private List<Cookie> getJwtTokenFromCookie(ServletRequest request) {
+        HttpServletRequest httpServletRequest = (HttpServletRequest) request;
+        if (null != httpServletRequest.getCookies()) {
+            return Arrays.asList(httpServletRequest.getCookies());
+        } else {
+            return Collections.emptyList();
+        }
     }
 }
