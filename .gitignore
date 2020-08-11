@@ -6,6 +6,9 @@ build/
 !**/src/test/**
 application.yml
 
+aws.yml
+Cookie.http
+
 ### STS ###
 .apt_generated
 .classpath
