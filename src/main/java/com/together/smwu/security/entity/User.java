@@ -18,7 +18,7 @@ import java.util.stream.Collectors;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "user")
+@Table(name = "USER")
 public class User implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -37,10 +37,11 @@ public class User implements UserDetails {
     @Column(length = 100)
     private String provider;
 
-    @Column(length = 150)
+    @Column(name = "profile_image", length = 150)
     private String profileImage;
 
     @ElementCollection(fetch = FetchType.EAGER)
+    @CollectionTable(name = "USER_ROLES")
     @Builder.Default
     private List<String> roles = new ArrayList<>();
 
