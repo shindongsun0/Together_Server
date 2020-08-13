@@ -16,7 +16,7 @@ public class PlaceImage {
     @Column(name = "place_image_id")
     private long placeImageId;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name ="place_id", nullable = false)
     private Place place;
 
