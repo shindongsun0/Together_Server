@@ -2,7 +2,7 @@ package com.together.smwu.security.service.interfaces;
 
 import com.together.smwu.security.model.request.SignUpRequest;
 import com.together.smwu.security.model.response.LoginResponse;
-import com.together.smwu.security.entity.User;
+import com.together.smwu.web.repository.user.User;
 import com.together.smwu.security.model.request.SignInRequest;
 import org.springframework.http.ResponseEntity;
 

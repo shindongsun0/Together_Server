@@ -2,12 +2,12 @@ package com.together.smwu.security.controller.v1;
 
 import com.together.smwu.advice.exception.CUserNotFoundException;
 import com.together.smwu.config.security.JwtTokenProvider;
-import com.together.smwu.security.entity.User;
+import com.together.smwu.web.repository.user.User;
 import com.together.smwu.security.model.request.UserRequest;
 import com.together.smwu.security.model.response.CommonResult;
 import com.together.smwu.security.model.response.ListResult;
 import com.together.smwu.security.model.response.SingleResult;
-import com.together.smwu.security.repository.UserJpaRepo;
+import com.together.smwu.web.repository.user.UserJpaRepo;
 import com.together.smwu.security.service.ResponseService;
 import io.swagger.annotations.*;
 import lombok.extern.slf4j.Slf4j;

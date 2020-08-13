@@ -4,7 +4,7 @@ import com.together.smwu.security.model.request.SignInRequest;
 import com.together.smwu.security.model.request.SignUpRequest;
 import com.together.smwu.security.model.response.CommonResult;
 import com.together.smwu.security.model.response.LoginResponse;
-import com.together.smwu.security.repository.UserJpaRepo;
+import com.together.smwu.web.repository.user.UserJpaRepo;
 import com.together.smwu.security.service.ResponseService;
 import com.together.smwu.security.service.interfaces.UserService;
 import com.together.smwu.security.service.social.KakaoService;
