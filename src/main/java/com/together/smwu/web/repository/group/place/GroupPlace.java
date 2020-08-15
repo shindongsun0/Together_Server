@@ -1,5 +1,6 @@
-package com.together.smwu.web.repository.group;
+package com.together.smwu.web.repository.group.place;
 
+import com.together.smwu.web.repository.group.Group;
 import com.together.smwu.web.repository.place.Place;
 import lombok.NoArgsConstructor;
 

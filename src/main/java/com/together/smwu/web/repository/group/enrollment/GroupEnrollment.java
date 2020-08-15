@@ -1,5 +1,6 @@
-package com.together.smwu.web.repository.group;
+package com.together.smwu.web.repository.group.enrollment;
 
+import com.together.smwu.web.repository.group.Group;
 import com.together.smwu.web.repository.user.User;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

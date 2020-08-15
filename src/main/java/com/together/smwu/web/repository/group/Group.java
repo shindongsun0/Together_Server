@@ -1,5 +1,6 @@
 package com.together.smwu.web.repository.group;
 
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -10,6 +11,7 @@ import java.sql.Timestamp;
 @Getter
 @Entity
 @NoArgsConstructor
+@Builder
 @Table(name = "GROUP")
 public class Group {
 
@@ -29,8 +31,8 @@ public class Group {
     @Column(name = "image_url")
     private String imageUrl;
 
-    @Column(name = "credential", length = 100)
-    private String credential;
+    @Column(name = "credential", length = 10)
+    private int credential;
 
     @Column(name = "created_time", nullable = false)
     private Timestamp createdTime;
