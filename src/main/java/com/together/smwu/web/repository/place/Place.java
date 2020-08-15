@@ -5,6 +5,7 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import javax.validation.constraints.Size;
+import java.sql.Timestamp;
 
 @Getter
 @Entity
@@ -36,4 +37,7 @@ public class Place {
 
     @Column(name = "main_image_url")
     String mainImageUrl;
+
+    @Column(name = "post_time", nullable = false)
+    Timestamp postTime;
 }
