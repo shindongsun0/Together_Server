@@ -1,4 +1,4 @@
-package com.together.smwu.security.service.interfaces;
+package com.together.smwu.web.service.user.interfaces;
 
 import com.together.smwu.security.model.request.SignUpRequest;
 import com.together.smwu.security.model.response.LoginResponse;
