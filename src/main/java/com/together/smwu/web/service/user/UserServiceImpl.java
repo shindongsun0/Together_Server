@@ -1,4 +1,4 @@
-package com.together.smwu.security.service;
+package com.together.smwu.web.service.user;
 
 import com.together.smwu.advice.exception.CUserExistException;
 import com.together.smwu.advice.exception.CUserNotFoundException;
@@ -11,7 +11,7 @@ import com.together.smwu.security.model.request.SignUpRequest;
 import com.together.smwu.security.model.response.LoginResponse;
 import com.together.smwu.security.model.social.KakaoProfile;
 import com.together.smwu.web.repository.user.UserJpaRepo;
-import com.together.smwu.security.service.interfaces.UserService;
+import com.together.smwu.web.service.user.interfaces.UserService;
 import com.together.smwu.security.service.social.KakaoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;

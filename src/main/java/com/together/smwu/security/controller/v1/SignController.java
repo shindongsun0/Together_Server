@@ -6,7 +6,7 @@ import com.together.smwu.security.model.response.CommonResult;
 import com.together.smwu.security.model.response.LoginResponse;
 import com.together.smwu.web.repository.user.UserJpaRepo;
 import com.together.smwu.security.service.ResponseService;
-import com.together.smwu.security.service.interfaces.UserService;
+import com.together.smwu.web.service.user.interfaces.UserService;
 import com.together.smwu.security.service.social.KakaoService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;

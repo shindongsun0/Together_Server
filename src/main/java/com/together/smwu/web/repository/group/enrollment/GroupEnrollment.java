@@ -2,6 +2,7 @@ package com.together.smwu.web.repository.group.enrollment;
 
 import com.together.smwu.web.repository.group.Group;
 import com.together.smwu.web.repository.user.User;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -29,4 +30,14 @@ public class GroupEnrollment {
 
     @Column(name = "date", nullable = false)
     Timestamp date;
+
+    @Column(name = "is_master", nullable = false)
+    Boolean isMaster;
+
+    @Builder
+    public GroupEnrollment(Group group, User user, Timestamp date){
+        this.group = group;
+        this.user = user;
+        this.date = date;
+    }
 }
