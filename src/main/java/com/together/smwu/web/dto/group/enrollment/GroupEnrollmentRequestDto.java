@@ -14,15 +14,15 @@ import java.sql.Timestamp;
 public class GroupEnrollmentRequestDto {
 
     private Group group;
-    private String credential;
+    private User user;
 
     @Builder
-    public GroupEnrollmentRequestDto(Group group, String credential) {
+    public GroupEnrollmentRequestDto(Group group, User user, String credential) {
         this.group = group;
-        this.credential = credential;
+        this.user = user;
     }
 
-    public GroupEnrollment toEntity(User user) {
+    public GroupEnrollment toEntity() {
         Timestamp now = new Timestamp(System.currentTimeMillis());
         return GroupEnrollment.builder()
                 .group(group)
