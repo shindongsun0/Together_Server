@@ -1,26 +1,20 @@
 package com.together.smwu.web.service.group.enrollment;
 
-import com.together.smwu.web.repository.group.enrollment.GroupEnrollmentRepository;
-import org.springframework.stereotype.Service;
+import com.together.smwu.web.dto.group.enrollment.GroupEnrollmentListResponseDto;
+import com.together.smwu.web.dto.group.enrollment.GroupEnrollmentRequestDto;
+import com.together.smwu.web.repository.user.User;
 
-@Service
-public class GroupEnrollmentService {
+import java.util.List;
 
-    private final GroupEnrollmentRepository groupEnrollmentRepository;
+public interface GroupEnrollmentService {
 
-    public GroupEnrollmentService(GroupEnrollmentRepository groupEnrollmentRepository) {
-        this.groupEnrollmentRepository = groupEnrollmentRepository;
-    }
+    boolean enroll(GroupEnrollmentRequestDto requestDto);
 
-//    @Transactional
-//    public String save(GroupEnrollmentRequestDto requestDto, ){
-//
-//        // Validate that the group is an existing group
-//        if(null == requestDto.getGroup()){
-//            throw new IllegalArgumentException("A group that does not exist.");
-//        }
-//        else if(requestDto.getCredential())
-//    }
+    void deleteAllUsers(long groupId, User user);
 
+    void deleteUserFromGroup(long userId);
 
+    List<GroupEnrollmentListResponseDto> findAllByGroup(long groupId);
+
+    List<GroupEnrollmentListResponseDto> findAllByUser(long userId);
 }
