@@ -31,8 +31,8 @@ public class Group {
     @Column(name = "image_url")
     private String imageUrl;
 
-    @Column(name = "credential", length = 10)
-    private int credential;
+    @Column(name = "credential")
+    private String credential;
 
     @Column(name = "created_time", nullable = false)
     private Timestamp createdTime;
