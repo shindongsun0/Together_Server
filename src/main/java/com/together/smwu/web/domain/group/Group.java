@@ -1,6 +1,5 @@
-package com.together.smwu.web.repository.group;
+package com.together.smwu.web.domain.group;
 
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -11,7 +10,6 @@ import java.sql.Timestamp;
 @Getter
 @Entity
 @NoArgsConstructor
-@Builder
 @Table(name = "GROUP")
 public class Group {
 
