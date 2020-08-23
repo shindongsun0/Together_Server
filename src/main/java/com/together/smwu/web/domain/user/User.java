@@ -1,4 +1,4 @@
-package com.together.smwu.web.repository.user;
+package com.together.smwu.web.domain.user;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
