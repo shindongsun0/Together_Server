@@ -1,6 +1,7 @@
 package com.together.smwu.web.repository.group.enrollment;
 
 import com.querydsl.jpa.impl.JPAQueryFactory;
+import com.together.smwu.web.domain.group.enrollment.GroupEnrollment;
 import lombok.RequiredArgsConstructor;
 
 import static com.together.smwu.web.repository.group.enrollment.QGroupEnrollment.groupEnrollment;

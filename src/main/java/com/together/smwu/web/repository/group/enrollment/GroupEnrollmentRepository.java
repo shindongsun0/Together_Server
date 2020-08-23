@@ -1,7 +1,8 @@
 package com.together.smwu.web.repository.group.enrollment;
 
-import com.together.smwu.web.repository.group.Group;
-import com.together.smwu.web.repository.user.User;
+import com.together.smwu.web.domain.group.enrollment.GroupEnrollment;
+import com.together.smwu.web.domain.group.Group;
+import com.together.smwu.web.domain.user.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;

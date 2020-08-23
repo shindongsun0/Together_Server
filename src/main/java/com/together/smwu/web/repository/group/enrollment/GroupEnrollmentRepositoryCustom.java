@@ -1,5 +1,7 @@
 package com.together.smwu.web.repository.group.enrollment;
 
+import com.together.smwu.web.domain.group.enrollment.GroupEnrollment;
+
 public interface GroupEnrollmentRepositoryCustom {
 
     long deleteAllByGroupId(long groupId);
