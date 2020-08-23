@@ -1,12 +1,11 @@
 package com.together.smwu.web.service.group.enrollment;
 
+import com.together.smwu.web.domain.group.Group;
+import com.together.smwu.web.domain.group.enrollment.GroupEnrollment;
 import com.together.smwu.web.domain.user.User;
-import com.together.smwu.web.dto.group.enrollment.GroupEnrollmentListResponseDto;
 import com.together.smwu.web.dto.group.enrollment.GroupEnrollmentRequestDto;
 import com.together.smwu.web.dto.group.enrollment.GroupEnrollmentResponseDto;
-import com.together.smwu.web.domain.group.Group;
 import com.together.smwu.web.repository.group.GroupRepository;
-import com.together.smwu.web.domain.group.enrollment.GroupEnrollment;
 import com.together.smwu.web.repository.group.enrollment.GroupEnrollmentRepository;
 import com.together.smwu.web.repository.user.UserRepository;
 import org.springframework.stereotype.Service;
@@ -118,7 +117,7 @@ public class GroupEnrollmentServiceImpl implements GroupEnrollmentService {
      * @return 해당 그룹의 전체 enroll 정보를 가져온다.
      */
     @Transactional
-    public List<GroupEnrollmentListResponseDto> findAllByGroup(long groupId) {
+    public List<GroupEnrollmentResponseDto> findAllByGroup(long groupId) {
 
         //group
         Group group = groupRepository.findById(groupId)
@@ -127,7 +126,7 @@ public class GroupEnrollmentServiceImpl implements GroupEnrollmentService {
         //find all groupEnrollments by group
         return groupEnrollmentRepository.findAllByGroup(group)
                 .stream()
-                .map(GroupEnrollmentListResponseDto::new)
+                .map(GroupEnrollmentResponseDto::new)
                 .collect(Collectors.toList());
     }
 
@@ -138,7 +137,7 @@ public class GroupEnrollmentServiceImpl implements GroupEnrollmentService {
      * @return
      */
     @Transactional
-    public List<GroupEnrollmentListResponseDto> findAllByUser(long userId) {
+    public List<GroupEnrollmentResponseDto> findAllByUser(long userId) {
 
         //user
         User user = userRepository.findById(userId)
@@ -147,7 +146,7 @@ public class GroupEnrollmentServiceImpl implements GroupEnrollmentService {
         //find all groupEnrollments by user
         return groupEnrollmentRepository.findAllByUser(user)
                 .stream()
-                .map(GroupEnrollmentListResponseDto::new)
+                .map(GroupEnrollmentResponseDto::new)
                 .collect(Collectors.toList());
     }
 

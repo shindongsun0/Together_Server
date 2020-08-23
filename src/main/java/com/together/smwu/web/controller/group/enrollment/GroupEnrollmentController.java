@@ -3,7 +3,6 @@ package com.together.smwu.web.controller.group.enrollment;
 import com.together.smwu.config.security.CurrentUser;
 import com.together.smwu.web.domain.user.User;
 import com.together.smwu.web.dto.group.enrollment.GroupEnrollmentDeleteResponseDto;
-import com.together.smwu.web.dto.group.enrollment.GroupEnrollmentListResponseDto;
 import com.together.smwu.web.dto.group.enrollment.GroupEnrollmentRequestDto;
 import com.together.smwu.web.dto.group.enrollment.GroupEnrollmentResponseDto;
 import com.together.smwu.web.service.group.enrollment.GroupEnrollmentService;
@@ -38,7 +37,7 @@ public class GroupEnrollmentController {
 
     @ApiOperation(value = "Group의 모든 user 조회", notes = "groupId로 모든 User를 조회한다.")
     @GetMapping(value = "/api/group/enroll/all/{groupId}")
-    public List<GroupEnrollmentListResponseDto> findAllUsers(
+    public List<GroupEnrollmentResponseDto> findAllUsers(
             @ApiParam(value = "groupId", required = true) @PathVariable long groupId,
             @CurrentUser User user) {
 
@@ -47,7 +46,7 @@ public class GroupEnrollmentController {
 
     @ApiOperation(value = "User가 속한 모든 group 조회", notes = "userId로 등록한 모든 group을 조회한다.")
     @GetMapping(value = "/api/group/enroll/all/{userId}")
-    public List<GroupEnrollmentListResponseDto> findAllGroups(
+    public List<GroupEnrollmentResponseDto> findAllGroups(
             @ApiParam(value = "userId", required = true) @PathVariable long userId,
             @CurrentUser User user) {
 
