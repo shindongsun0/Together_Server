@@ -1,6 +1,6 @@
 package com.together.smwu.web.dto.group.enrollment;
 
-import com.together.smwu.web.repository.group.enrollment.GroupEnrollment;
+import com.together.smwu.web.domain.group.enrollment.GroupEnrollment;
 import lombok.Getter;
 
 import java.sql.Timestamp;

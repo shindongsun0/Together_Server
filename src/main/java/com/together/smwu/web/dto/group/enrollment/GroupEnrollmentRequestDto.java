@@ -1,7 +1,7 @@
 package com.together.smwu.web.dto.group.enrollment;
 
-import com.together.smwu.web.repository.group.Group;
-import com.together.smwu.web.repository.group.enrollment.GroupEnrollment;
+import com.together.smwu.web.domain.group.Group;
+import com.together.smwu.web.domain.group.enrollment.GroupEnrollment;
 import com.together.smwu.web.domain.user.User;
 import lombok.Builder;
 import lombok.Getter;
