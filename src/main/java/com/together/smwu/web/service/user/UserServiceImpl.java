@@ -5,12 +5,12 @@ import com.together.smwu.advice.exception.CUserNotFoundException;
 import com.together.smwu.config.S3Uploader;
 import com.together.smwu.config.security.CookieUtil;
 import com.together.smwu.config.security.JwtTokenProvider;
-import com.together.smwu.web.repository.user.User;
+import com.together.smwu.web.domain.user.User;
 import com.together.smwu.security.model.request.SignInRequest;
 import com.together.smwu.security.model.request.SignUpRequest;
 import com.together.smwu.security.model.response.LoginResponse;
 import com.together.smwu.security.model.social.KakaoProfile;
-import com.together.smwu.web.repository.user.UserJpaRepo;
+import com.together.smwu.web.repository.user.UserRepository;
 import com.together.smwu.web.service.user.interfaces.UserService;
 import com.together.smwu.security.service.social.KakaoService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,7 +26,7 @@ import java.util.Optional;
 public class UserServiceImpl implements UserService {
 
     private final S3Uploader s3Uploader;
-    private UserJpaRepo userJpaRepo;
+    private UserRepository userRepository;
     private JwtTokenProvider jwtTokenProvider;
     private KakaoService kakaoService;
 
@@ -34,9 +34,9 @@ public class UserServiceImpl implements UserService {
     private static final Integer TOKEN_VALID_MILLISECOND = 1000 * 60 * 60 * 24;
 
     @Autowired
-    public UserServiceImpl(UserJpaRepo userJpaRepo, JwtTokenProvider jwtTokenProvider,
+    public UserServiceImpl(UserRepository userRepository, JwtTokenProvider jwtTokenProvider,
                            KakaoService kakaoService, S3Uploader s3Uploader){
-        this.userJpaRepo = userJpaRepo;
+        this.userRepository = userRepository;
         this.jwtTokenProvider = jwtTokenProvider;
         this.kakaoService = kakaoService;
         this.s3Uploader = s3Uploader;
@@ -47,7 +47,7 @@ public class UserServiceImpl implements UserService {
                                HttpServletResponse response, String accessToken) {
 
         KakaoProfile kakaoProfile = kakaoService.getKakaoProfile(signInRequest.getAccessToken());
-        User user = userJpaRepo.findByUidAndProvider(String.valueOf(kakaoProfile.getId()), signInRequest.getProvider())
+        User user = userRepository.findByUidAndProvider(String.valueOf(kakaoProfile.getId()), signInRequest.getProvider())
                 .orElseThrow(CUserNotFoundException::new);
 
         boolean accessTokenValid = jwtTokenProvider.validateToken(accessToken);
@@ -80,7 +80,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public void signUp(SignUpRequest signUpRequest) {
         KakaoProfile kakaoProfile = kakaoService.getKakaoProfile(signUpRequest.getAccessToken());
-        Optional<User> user = userJpaRepo.findByUidAndProvider(
+        Optional<User> user = userRepository.findByUidAndProvider(
                 String.valueOf(kakaoProfile.getId()), signUpRequest.getProvider());
 
         if (user.isPresent())
@@ -100,6 +100,6 @@ public class UserServiceImpl implements UserService {
             inUser.setProfileImage(signUpRequest.getProfileImage());
         }
 
-        userJpaRepo.save(inUser);
+        userRepository.save(inUser);
     }
 }

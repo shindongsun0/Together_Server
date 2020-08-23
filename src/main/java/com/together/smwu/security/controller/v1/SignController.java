@@ -4,7 +4,7 @@ import com.together.smwu.security.model.request.SignInRequest;
 import com.together.smwu.security.model.request.SignUpRequest;
 import com.together.smwu.security.model.response.CommonResult;
 import com.together.smwu.security.model.response.LoginResponse;
-import com.together.smwu.web.repository.user.UserJpaRepo;
+import com.together.smwu.web.repository.user.UserRepository;
 import com.together.smwu.security.service.ResponseService;
 import com.together.smwu.web.service.user.interfaces.UserService;
 import com.together.smwu.security.service.social.KakaoService;
@@ -24,15 +24,15 @@ import javax.servlet.http.HttpServletResponse;
 @RequestMapping(value = "/v1")
 public class SignController {
 
-    private final UserJpaRepo userJpaRepo;
+    private final UserRepository userRepository;
     private final ResponseService responseService;
     private final UserService userService;
     private final KakaoService kakaoService;
 
     @Autowired
-    public SignController(UserJpaRepo userJpaRepo, ResponseService responseService,
+    public SignController(UserRepository userRepository, ResponseService responseService,
                           UserService userService, KakaoService kakaoService) {
-        this.userJpaRepo = userJpaRepo;
+        this.userRepository = userRepository;
         this.responseService = responseService;
         this.userService = userService;
         this.kakaoService = kakaoService;
