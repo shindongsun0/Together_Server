@@ -8,6 +8,7 @@ application.yml
 
 aws.yml
 Cookie.http
+generated
 
 ### STS ###
 .apt_generated

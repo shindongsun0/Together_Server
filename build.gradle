@@ -1,3 +1,16 @@
+buildscript {
+    ext{
+        querydslPluginVersion = '1.0.10'
+    }
+    repositories {
+        mavenCentral()
+        maven { url "https://plugins.gradle.org/m2/" } // plugin 저장소
+    }
+    dependencies {
+        classpath("gradle.plugin.com.ewerk.gradle.plugins:querydsl-plugin:${querydslPluginVersion}")
+    }
+}
+
 plugins {
     id 'org.springframework.boot' version '2.2.2.RELEASE'
     id 'io.spring.dependency-management' version '1.0.8.RELEASE'
@@ -39,6 +52,13 @@ dependencies {
     compile('org.springframework.cloud:spring-cloud-starter-aws')
     compile 'pl.allegro.tech.boot:handlebars-spring-boot-starter:0.3.0'
 
+    // querydsl
+    compile 'com.querydsl:querydsl-apt'
+    compile 'com.querydsl:querydsl-jpa'
+
+    testCompile 'com.querydsl:querydsl-apt'
+    testCompile 'com.querydsl:querydsl-jpa'
+
     compile "io.springfox:springfox-swagger2:2.9.2"
     compile "io.springfox:springfox-swagger-ui:2.9.2"
     compileOnly "org.projectlombok:lombok:1.16.16"
@@ -63,4 +83,30 @@ dependencyManagement {
 
 test {
     useJUnitPlatform()
+}
+
+// querydsl 적용
+apply plugin: "com.ewerk.gradle.plugins.querydsl"
+def querydslSrcDir = 'src/main/generated'
+
+querydsl {
+    library = "com.querydsl:querydsl-apt"
+    jpa = true
+    querydslSourcesDir = querydslSrcDir
+}
+
+sourceSets {
+    main {
+        java {
+            srcDirs = ['src/main/java', querydslSrcDir]
+        }
+    }
+}
+
+compileQuerydsl{
+    options.annotationProcessorPath = configurations.querydsl
+}
+
+configurations {
+    querydsl.extendsFrom compileClasspath
 }
