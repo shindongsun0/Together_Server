@@ -29,7 +29,7 @@ public class GroupEnrollmentServiceImpl implements GroupEnrollmentService {
     }
 
     /**
-     * group에 참여한다.
+     * group에 참여한다. 이 메소드는 방장이 아닌 새 User가 그룹에 참여할 때 불린다.
      *
      * @param requestDto group, user, credential
      * @return true: 등록성공
