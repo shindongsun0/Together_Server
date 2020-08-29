@@ -12,11 +12,10 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
 
 public class JwtAuthenticationFilter extends GenericFilterBean {
 
+    private static final String JWT_COOKIE_NAME = "X-AUTH-TOKEN";
     private JwtTokenProvider jwtTokenProvider;
 
     public JwtAuthenticationFilter(JwtTokenProvider jwtTokenProvider) {
@@ -26,22 +25,34 @@ public class JwtAuthenticationFilter extends GenericFilterBean {
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain filterChain)
             throws IOException, ServletException {
-
-        List<Cookie> cookies = getJwtTokenFromCookie(request);
-        String token = jwtTokenProvider.resolveTokenValue(cookies, (HttpServletRequest) request);
-        if (null != token && jwtTokenProvider.validateToken(token)) {
-            Authentication auth = jwtTokenProvider.getAuthentication(token);
-            SecurityContextHolder.getContext().setAuthentication(auth);
+        try {
+            String token = getJwtTokenFromCookie(request);
+            if (null != token && jwtTokenProvider.validateToken(token)) {
+                Authentication auth = jwtTokenProvider.getAuthentication(token);
+                SecurityContextHolder.getContext().setAuthentication(auth);
+            }
+        } catch (Exception e) {
+            logger.error("Could not set user authentication in security context", e);
         }
-        filterChain. doFilter(request, response);
+        filterChain.doFilter(request, response);
     }
 
-    private List<Cookie> getJwtTokenFromCookie(ServletRequest request) {
+    /**
+     * Find JWT Cookie and get JWT token
+     *
+     * @param request incoming HTTP Request
+     * @return JWT, or {@code null} if no token was found
+     */
+    private String getJwtTokenFromCookie(ServletRequest request) {
         HttpServletRequest httpServletRequest = (HttpServletRequest) request;
         if (null != httpServletRequest.getCookies()) {
-            return Arrays.asList(httpServletRequest.getCookies());
+            return Arrays.stream(httpServletRequest.getCookies())
+                    .filter(cookie -> cookie.getName().equals(JWT_COOKIE_NAME))
+                    .map(Cookie::getValue)
+                    .findAny()
+                    .orElse(null);
         } else {
-            return Collections.emptyList();
+            return null;
         }
     }
 }
