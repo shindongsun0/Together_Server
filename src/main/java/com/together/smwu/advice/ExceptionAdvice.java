@@ -4,7 +4,7 @@ import com.together.smwu.advice.exception.CAuthenticationEntryPointException;
 import com.together.smwu.advice.exception.CCommunicationException;
 import com.together.smwu.advice.exception.CUserExistException;
 import com.together.smwu.advice.exception.CUserNotFoundException;
-import com.together.smwu.security.model.response.CommonResult;
+import com.together.smwu.domain.user.dto.response.CommonResult;
 import com.together.smwu.security.service.ResponseService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.MessageSource;
