@@ -1,4 +1,4 @@
-package com.together.smwu.config.security;
+package com.together.smwu.security.config.jwt;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;

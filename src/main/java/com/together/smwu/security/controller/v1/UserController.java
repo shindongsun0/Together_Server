@@ -1,7 +1,7 @@
 package com.together.smwu.security.controller.v1;
 
 import com.together.smwu.advice.exception.CUserNotFoundException;
-import com.together.smwu.config.security.JwtTokenProvider;
+import com.together.smwu.security.config.jwt.JwtTokenProvider;
 import com.together.smwu.security.entity.User;
 import com.together.smwu.security.model.request.UserRequest;
 import com.together.smwu.security.model.response.CommonResult;

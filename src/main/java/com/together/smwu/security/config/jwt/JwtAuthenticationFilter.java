@@ -1,4 +1,4 @@
-package com.together.smwu.config.security;
+package com.together.smwu.security.config.jwt;
 
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
