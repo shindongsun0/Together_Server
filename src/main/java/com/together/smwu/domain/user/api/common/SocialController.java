@@ -1,7 +1,7 @@
-package com.together.smwu.security.controller.common;
+package com.together.smwu.domain.user.api.common;
 
 import com.google.gson.Gson;
-import com.together.smwu.security.service.social.KakaoService;
+import com.together.smwu.domain.user.application.social.KakaoService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.env.Environment;

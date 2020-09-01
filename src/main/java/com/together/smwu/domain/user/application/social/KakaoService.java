@@ -1,4 +1,4 @@
-package com.together.smwu.security.service.social;
+package com.together.smwu.domain.user.application.social;
 
 import com.google.gson.Gson;
 import com.together.smwu.advice.exception.CCommunicationException;
