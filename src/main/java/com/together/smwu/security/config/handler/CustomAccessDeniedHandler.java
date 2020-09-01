@@ -1,4 +1,4 @@
-package com.together.smwu.config.security;
+package com.together.smwu.security.config.handler;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.access.AccessDeniedException;
