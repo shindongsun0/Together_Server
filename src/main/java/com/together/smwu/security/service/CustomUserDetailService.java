@@ -1,7 +1,7 @@
 package com.together.smwu.security.service;
 
 import com.together.smwu.advice.exception.CUserNotFoundException;
-import com.together.smwu.web.repository.user.UserRepository;
+import com.together.smwu.domain.user.dao.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
