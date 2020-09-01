@@ -1,8 +1,8 @@
 package com.together.smwu.security.service;
 
-import com.together.smwu.security.model.response.CommonResult;
-import com.together.smwu.security.model.response.ListResult;
-import com.together.smwu.security.model.response.SingleResult;
+import com.together.smwu.domain.user.dto.response.CommonResult;
+import com.together.smwu.domain.user.dto.response.ListResult;
+import com.together.smwu.domain.user.dto.response.SingleResult;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
