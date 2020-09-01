@@ -1,4 +1,4 @@
-package com.together.smwu.config.security;
+package com.together.smwu.security.config;
 
 import org.apache.tomcat.util.http.LegacyCookieProcessor;
 import org.springframework.boot.web.embedded.tomcat.TomcatServletWebServerFactory;

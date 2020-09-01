@@ -1,4 +1,4 @@
-package com.together.smwu.config.security;
+package com.together.smwu.security.config;
 
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.AuthenticationEntryPoint;
