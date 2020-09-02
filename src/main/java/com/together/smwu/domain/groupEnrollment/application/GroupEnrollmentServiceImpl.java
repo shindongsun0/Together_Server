@@ -1,13 +1,16 @@
 package com.together.smwu.domain.groupEnrollment.application;
 
+import com.together.smwu.domain.group.dao.GroupRepository;
 import com.together.smwu.domain.group.domain.Group;
+import com.together.smwu.domain.group.exception.GroupNotFoundException;
+import com.together.smwu.domain.groupEnrollment.dao.GroupEnrollmentRepository;
 import com.together.smwu.domain.groupEnrollment.domain.GroupEnrollment;
-import com.together.smwu.domain.user.domain.User;
 import com.together.smwu.domain.groupEnrollment.dto.GroupEnrollmentRequestDto;
 import com.together.smwu.domain.groupEnrollment.dto.GroupEnrollmentResponseDto;
-import com.together.smwu.domain.group.dao.GroupRepository;
-import com.together.smwu.domain.groupEnrollment.dao.GroupEnrollmentRepository;
+import com.together.smwu.domain.groupEnrollment.exception.GroupUserMismatchException;
 import com.together.smwu.domain.user.dao.UserRepository;
+import com.together.smwu.domain.user.domain.User;
+import com.together.smwu.domain.user.exception.UserNotFoundException;
 import org.springframework.stereotype.Service;
 
 import javax.jdo.annotations.Transactional;
@@ -35,52 +38,55 @@ public class GroupEnrollmentServiceImpl implements GroupEnrollmentService {
      * @return true: 등록성공
      */
     @Transactional
-    public boolean enroll(GroupEnrollmentRequestDto requestDto) {
+    public Long enroll(GroupEnrollmentRequestDto requestDto, User user) {
 
-        // Validate that the group is an existing group
-        if (null == requestDto.getGroup()) {
-            throw new IllegalArgumentException("A group that does not exist.");
-        }
-        // Validate that the user is an existing group
-        if (null == requestDto.getUser()) {
-            throw new IllegalArgumentException("A user that does not exist.");
-        }
-
-        Group group = groupRepository.findById(requestDto.getGroup().getId())
-                .orElseThrow(() -> new RuntimeException("No Corresponding group name found."));
-
-        User user = userRepository.findById(requestDto.getUser().getMsrl())
-                .orElseThrow(() -> new RuntimeException("No Corresponding user name found."));
+        GroupEnrollment groupEnrollment = convertToGroupEnrollment(requestDto, user);
 
         // check if is already exists.
         groupEnrollmentRepository
-                .findByUserAndGroup(user, group)
-                .orElseThrow(() -> new IllegalArgumentException("Already Existing Group And User"));
-
-        GroupEnrollment groupEnrollment = requestDto.toEntity();
+                .findByUserAndGroup(groupEnrollment.getUser(), groupEnrollment.getGroup())
+                .orElseThrow(GroupUserMismatchException::new);
 
         groupEnrollmentRepository.save(groupEnrollment);
 
-        return true;
+        return groupEnrollment.getGroupEnrollmentId();
+    }
+
+    private GroupEnrollment convertToGroupEnrollment(GroupEnrollmentRequestDto request, User user) {
+        Group group = groupRepository.findById(request.getGroupId())
+                .orElseThrow(GroupNotFoundException::new);
+
+        boolean isMasterUser = checkIsMasterUser(group, user);
+
+        return GroupEnrollment.builder()
+                .group(group)
+                .user(user)
+                .isMaster(isMasterUser)
+                .build();
+    }
+
+    private boolean checkIsMasterUser(Group group, User user) {
+        return groupEnrollmentRepository.findAllByGroup(group).isEmpty();
     }
 
     /**
      * group을 삭제하거나 모두 강퇴시킨다.
      *
      * @param groupId 어떤 group
-     * @param user 방장인지 확인하기 위함.
+     * @param user    방장인지 확인하기 위함.
      */
     @Transactional
     public void deleteAllUsers(long groupId, User user) {
 
         //존재하는 group 인지 확인한다.
         groupRepository.findById(groupId)
-                .orElseThrow(() -> new RuntimeException("No Corresponding group found."));
+                .orElseThrow(GroupNotFoundException::new);
 
         //방장(master) 인지 확인한다.
         GroupEnrollment groupEnrollment = groupEnrollmentRepository
                 .findByUserAndGroup(user, groupRepository.getOne(groupId))
-                .orElseThrow(() -> new RuntimeException("No Existing Group, User Information."));
+                .orElseThrow(GroupUserMismatchException::new);
+
         if (groupEnrollment.getIsMaster()) {
             groupEnrollmentRepository.deleteAllByGroupId(groupId);
         } else {
@@ -99,10 +105,10 @@ public class GroupEnrollmentServiceImpl implements GroupEnrollmentService {
     public void deleteUserFromGroup(long groupId, User user) {
 
         Group group = groupRepository.findById(groupId)
-                .orElseThrow(() -> new RuntimeException("No Corresponding group found."));
+                .orElseThrow(GroupNotFoundException::new);
 
         GroupEnrollment groupEnrollment = groupEnrollmentRepository.findByUserAndGroup(user, group)
-                .orElseThrow(() -> new IllegalArgumentException("No Enrolled User in corresponding Group."));
+                .orElseThrow(GroupUserMismatchException::new);
 
         long groupEnrollmentId = groupEnrollment.getGroupEnrollmentId();
 
@@ -121,7 +127,7 @@ public class GroupEnrollmentServiceImpl implements GroupEnrollmentService {
 
         //group
         Group group = groupRepository.findById(groupId)
-                .orElseThrow(() -> new RuntimeException("No Corresponding group found."));
+                .orElseThrow(GroupNotFoundException::new);
 
         //find all groupEnrollments by group
         return groupEnrollmentRepository.findAllByGroup(group)
@@ -141,7 +147,7 @@ public class GroupEnrollmentServiceImpl implements GroupEnrollmentService {
 
         //user
         User user = userRepository.findById(userId)
-                .orElseThrow(() -> new RuntimeException("No Corresponding user found."));
+                .orElseThrow(UserNotFoundException::new);
 
         //find all groupEnrollments by user
         return groupEnrollmentRepository.findAllByUser(user)
@@ -151,10 +157,10 @@ public class GroupEnrollmentServiceImpl implements GroupEnrollmentService {
     }
 
     @Transactional
-    public GroupEnrollmentResponseDto findById(long id){
+    public GroupEnrollmentResponseDto findById(long id) {
 
         GroupEnrollment groupEnrollment = groupEnrollmentRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("No Enrollment Found."));
+                .orElseThrow(GroupUserMismatchException::new);
 
         return new GroupEnrollmentResponseDto(groupEnrollment);
     }

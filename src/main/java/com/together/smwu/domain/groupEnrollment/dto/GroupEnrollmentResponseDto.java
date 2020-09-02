@@ -11,14 +11,14 @@ public class GroupEnrollmentResponseDto {
     private Long groupEnrollmentId;
     private Long groupId;
     private Long userId;
-    private Timestamp date;
+    private Timestamp enrolledAt;
     private Boolean isMaster;
 
     public GroupEnrollmentResponseDto(GroupEnrollment entity){
         this.groupEnrollmentId = entity.getGroupEnrollmentId();
         this.groupId = entity.getGroup().getId();
         this.userId = entity.getUser().getMsrl();
-        this.date = entity.getDate();
+        this.enrolledAt = entity.getEnrolledAt();
         this.isMaster = entity.getIsMaster();
     }
 }
