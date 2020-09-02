@@ -1,6 +1,6 @@
 package com.together.smwu.domain.user.exception;
 
-import com.together.smwu.advice.exception.CAuthenticationEntryPointException;
+import com.together.smwu.global.advice.exception.CAuthenticationEntryPointException;
 import com.together.smwu.domain.user.dto.response.CommonResult;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.AccessDeniedException;

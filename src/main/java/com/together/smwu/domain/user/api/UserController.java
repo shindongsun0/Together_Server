@@ -1,13 +1,13 @@
 package com.together.smwu.domain.user.api;
 
-import com.together.smwu.advice.exception.CUserNotFoundException;
-import com.together.smwu.config.security.CurrentUser;
-import com.together.smwu.security.config.jwt.JwtTokenProvider;
+import com.together.smwu.global.advice.exception.CUserNotFoundException;
+import com.together.smwu.domain.security.security.CurrentUser;
+import com.together.smwu.domain.security.config.jwt.JwtTokenProvider;
 import com.together.smwu.domain.user.dto.request.UserRequest;
 import com.together.smwu.domain.user.dto.response.CommonResult;
 import com.together.smwu.domain.user.dto.response.ListResult;
 import com.together.smwu.domain.user.dto.response.SingleResult;
-import com.together.smwu.security.service.ResponseService;
+import com.together.smwu.domain.security.service.ResponseService;
 import com.together.smwu.domain.user.domain.User;
 import com.together.smwu.domain.user.dao.UserRepository;
 import io.swagger.annotations.Api;
