@@ -1,11 +1,11 @@
 package com.together.smwu.domain.user.application;
 
-import com.together.smwu.advice.exception.CUserExistException;
-import com.together.smwu.advice.exception.CUserNotFoundException;
-import com.together.smwu.config.S3Uploader;
+import com.together.smwu.global.advice.exception.CUserExistException;
+import com.together.smwu.global.advice.exception.CUserNotFoundException;
+import com.together.smwu.global.config.S3Uploader;
 import com.together.smwu.domain.user.application.interfaces.UserService;
-import com.together.smwu.security.config.CookieUtil;
-import com.together.smwu.security.config.jwt.JwtTokenProvider;
+import com.together.smwu.domain.security.config.CookieUtil;
+import com.together.smwu.domain.security.config.jwt.JwtTokenProvider;
 import com.together.smwu.domain.user.dto.request.SignInRequest;
 import com.together.smwu.domain.user.dto.request.SignUpRequest;
 import com.together.smwu.domain.user.dto.response.LoginResponse;

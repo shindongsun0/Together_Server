@@ -1,7 +1,9 @@
 package com.together.smwu.domain.group.domain;
 
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.*;
 import javax.validation.constraints.Size;
@@ -16,7 +18,7 @@ public class Group {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "group_id")
-    private long id;
+    private Long id;
 
     @Column(name = "title", nullable = false, length = 100)
     @Size(min = 1, max = 100)
@@ -32,7 +34,16 @@ public class Group {
     @Column(name = "credential")
     private String credential;
 
+    @CreationTimestamp
     @Column(name = "created_time", nullable = false)
     private Timestamp createdTime;
 
+    @Builder
+    public Group(String title, String content, String imageUrl,
+                 String credential) {
+        this.title = title;
+        this.content = content;
+        this.imageUrl = imageUrl;
+        this.credential = credential;
+    }
 }

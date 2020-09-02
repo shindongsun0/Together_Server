@@ -5,6 +5,7 @@ import com.together.smwu.domain.user.domain.User;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.*;
 import java.sql.Timestamp;
@@ -28,16 +29,17 @@ public class GroupEnrollment {
     @JoinColumn(name = "group_id", nullable = false)
     private Group group;
 
-    @Column(name = "date", nullable = false)
-    Timestamp date;
+    @CreationTimestamp
+    @Column(name = "enrolled_at", nullable = false)
+    Timestamp enrolledAt;
 
     @Column(name = "is_master", nullable = false)
     Boolean isMaster;
 
     @Builder
-    public GroupEnrollment(Group group, User user, Timestamp date){
+    public GroupEnrollment(Group group, User user, Boolean isMaster){
         this.group = group;
         this.user = user;
-        this.date = date;
+        this.isMaster = isMaster;
     }
 }

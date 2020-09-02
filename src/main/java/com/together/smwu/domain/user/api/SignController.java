@@ -5,7 +5,7 @@ import com.together.smwu.domain.user.dto.request.SignUpRequest;
 import com.together.smwu.domain.user.dto.response.CommonResult;
 import com.together.smwu.domain.user.dto.response.LoginResponse;
 import com.together.smwu.domain.user.dao.UserRepository;
-import com.together.smwu.security.service.ResponseService;
+import com.together.smwu.domain.security.service.ResponseService;
 import com.together.smwu.domain.user.application.interfaces.UserService;
 import com.together.smwu.domain.user.application.social.KakaoService;
 import io.swagger.annotations.Api;

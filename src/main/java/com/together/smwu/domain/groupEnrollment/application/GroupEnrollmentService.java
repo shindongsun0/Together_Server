@@ -8,7 +8,7 @@ import java.util.List;
 
 public interface GroupEnrollmentService {
 
-    boolean enroll(GroupEnrollmentRequestDto requestDto);
+    Long enroll(GroupEnrollmentRequestDto requestDto, User user);
 
     void deleteAllUsers(long groupId, User user);
 

@@ -1,7 +1,7 @@
 package com.together.smwu.domain.user.application.social;
 
 import com.google.gson.Gson;
-import com.together.smwu.advice.exception.CCommunicationException;
+import com.together.smwu.global.advice.exception.CCommunicationException;
 import com.together.smwu.domain.user.dto.social.KakaoProfile;
 import com.together.smwu.domain.user.dto.social.RetKakaoAuth;
 import lombok.RequiredArgsConstructor;
