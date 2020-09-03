@@ -38,6 +38,13 @@ public class Group {
     @Column(name = "created_time", nullable = false)
     private Timestamp createdTime;
 
+    public void update(Group group) {
+        this.title = group.title;
+        this.content = group.content;
+        this.imageUrl = group.imageUrl;
+        this.credential = group.credential;
+    }
+
     @Builder
     public Group(String title, String content, String imageUrl,
                  String credential) {
