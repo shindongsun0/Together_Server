@@ -7,7 +7,8 @@ import lombok.NoArgsConstructor;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PACKAGE)
-public class GroupCreateRequestDto {
+public class GroupRequest {
+    private final String BASE_IMAGE_URL = "https://together-user-thumbnail.s3.ap-northeast-2.amazonaws.com/static/up.png";
 
     private String title;
     private String content;
@@ -15,8 +16,8 @@ public class GroupCreateRequestDto {
     private String credential;
 
 
-    private GroupCreateRequestDto(String title, String content, String imageUrl,
-                                  String credential) {
+    private GroupRequest(String title, String content, String imageUrl,
+                         String credential) {
         this.title = title;
         this.content = content;
         this.imageUrl = imageUrl;
@@ -24,6 +25,9 @@ public class GroupCreateRequestDto {
     }
 
     public Group toGroupEntity() {
+        if (imageUrl.isEmpty()) {
+            imageUrl = BASE_IMAGE_URL;
+        }
         return Group.builder()
                 .title(title)
                 .content(content)
