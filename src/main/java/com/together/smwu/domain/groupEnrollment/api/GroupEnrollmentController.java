@@ -8,7 +8,6 @@ import com.together.smwu.domain.user.domain.User;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -19,9 +18,8 @@ import java.util.List;
 @PreAuthorize("hasRole('ROLE_USER')")
 @Api(tags = {"4.GroupEnrollment"})
 @RestController
-@Slf4j
 public class GroupEnrollmentController {
-    public static final String GROUP_ENROLL_URI = "/api.group/enroll";
+    public static final String GROUP_ENROLL_URI = "/api/group/enroll";
 
     private final GroupEnrollmentService groupEnrollmentService;
 
@@ -58,6 +56,7 @@ public class GroupEnrollmentController {
         return ResponseEntity.ok(responses);
     }
 
+    @ApiOperation(value = "GroupEnrollment 조회", notes = "groupEnrollmentId로 Group에 속한 User들을 조회한다.")
     @GetMapping("/api/group/enroll/{groupEnrollmentId}")
     public ResponseEntity<GroupEnrollmentResponseDto> findByGroupEnrollmentId(
             @ApiParam(value = "groupEnrollmentId", required = true) @PathVariable Long groupEnrollmentId) {

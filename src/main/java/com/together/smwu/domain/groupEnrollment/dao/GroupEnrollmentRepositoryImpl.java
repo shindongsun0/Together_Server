@@ -4,6 +4,8 @@ import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.together.smwu.domain.groupEnrollment.domain.GroupEnrollment;
 import lombok.RequiredArgsConstructor;
 
+import java.util.List;
+
 import static com.together.smwu.domain.groupEnrollment.domain.QGroupEnrollment.groupEnrollment;
 
 @RequiredArgsConstructor
@@ -34,5 +36,18 @@ public class GroupEnrollmentRepositoryImpl implements GroupEnrollmentRepositoryC
                 .from(groupEnrollment)
                 .where(groupEnrollment.user.msrl.eq(userId))
                 .fetchOne();
+    }
+
+    @Override
+    public boolean checkIfMasterOfGroup(long groupId, long userId) {
+        List<GroupEnrollment> groupEnrollments = queryFactory
+                .select(groupEnrollment)
+                .from(groupEnrollment)
+                .where(groupEnrollment.group.id.eq(groupId)
+                        .and(groupEnrollment.user.msrl.eq(userId))
+                        .and(groupEnrollment.isMaster.isTrue()))
+                .fetch();
+
+        return groupEnrollments.isEmpty();
     }
 }

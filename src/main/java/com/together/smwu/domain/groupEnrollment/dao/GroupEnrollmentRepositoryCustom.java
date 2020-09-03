@@ -9,4 +9,6 @@ public interface GroupEnrollmentRepositoryCustom {
     long deleteAllByUserId(long userId);
 
     GroupEnrollment findByUserId(long userId);
+
+    boolean checkIfMasterOfGroup(long groupId, long userId);
 }
