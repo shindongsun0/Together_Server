@@ -17,9 +17,9 @@ public enum ErrorCode {
     USER_ALREADY_EXISTS(400, "U001", "User was already registered"),
     USER_LOGGED_OUT(400, "U002", "Users' JWT Token Expired"),
 
-    // Group
-    GROUP_ALREADY_EXISTS(400, "GR001", "Group was already made"),
-    GROUP_NOT_AUTHORIZED(403, "GR002", "Group Access is Denied");
+    // Room
+    ROOM_ALREADY_EXISTS(400, "GR001", "Room was already made"),
+    ROOM_NOT_AUTHORIZED(403, "GR002", "Room Access is Denied");
 
     private final String code;
     private final String message;
