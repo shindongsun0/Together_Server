@@ -1,7 +1,8 @@
-package com.together.smwu.domain.groupEnrollment.domain;
+package com.together.smwu.domain.roomEnrollment.domain;
 
-import com.together.smwu.domain.group.domain.Group;
+import com.together.smwu.domain.room.domain.Room;
 import com.together.smwu.domain.user.domain.User;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -13,21 +14,22 @@ import java.sql.Timestamp;
 @Getter
 @Entity
 @NoArgsConstructor
-@Table(name = "GROUP_ENROLLMENT")
-public class GroupEnrollment {
+@AllArgsConstructor
+@Table(name = "ROOM_ENROLLMENT")
+public class RoomEnrollment {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "group_enrollment_id")
-    private long groupEnrollmentId;
+    @Column(name = "room_enrollment_id")
+    private long roomEnrollmentId;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_msrl", nullable = false)
+    @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "group_id", nullable = false)
-    private Group group;
+    @JoinColumn(name = "room_id", nullable = false)
+    private Room room;
 
     @CreationTimestamp
     @Column(name = "enrolled_at", nullable = false)
@@ -37,8 +39,8 @@ public class GroupEnrollment {
     Boolean isMaster;
 
     @Builder
-    public GroupEnrollment(Group group, User user, Boolean isMaster){
-        this.group = group;
+    public RoomEnrollment(Room room, User user, Boolean isMaster){
+        this.room = room;
         this.user = user;
         this.isMaster = isMaster;
     }

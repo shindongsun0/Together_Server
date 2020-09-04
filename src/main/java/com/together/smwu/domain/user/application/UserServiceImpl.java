@@ -47,14 +47,14 @@ public class UserServiceImpl implements UserService {
                                HttpServletResponse response, String accessToken) {
 
         KakaoProfile kakaoProfile = kakaoService.getKakaoProfile(signInRequest.getAccessToken());
-        User user = userRepository.findByUidAndProvider(String.valueOf(kakaoProfile.getId()), signInRequest.getProvider())
+        User user = userRepository.findBySocialIdAndProvider(String.valueOf(kakaoProfile.getId()), signInRequest.getProvider())
                 .orElseThrow(CUserNotFoundException::new);
 
         boolean accessTokenValid = jwtTokenProvider.validateToken(accessToken);
 
         // Valid한 토큰이 아니라면 Cookie에 새로운 토큰을 넣는다.
         if(!accessTokenValid){
-            String newJwtToken = jwtTokenProvider.createToken(String.valueOf(user.getMsrl()), user.getRoles());
+            String newJwtToken = jwtTokenProvider.createToken(String.valueOf(user.getUserId()), user.getRoles());
             CookieUtil.create(response, COOKIE_NAME, newJwtToken, false, TOKEN_VALID_MILLISECOND, "*");
         }
 
@@ -80,14 +80,14 @@ public class UserServiceImpl implements UserService {
     @Override
     public void signUp(SignUpRequest signUpRequest) {
         KakaoProfile kakaoProfile = kakaoService.getKakaoProfile(signUpRequest.getAccessToken());
-        Optional<User> user = userRepository.findByUidAndProvider(
+        Optional<User> user = userRepository.findBySocialIdAndProvider(
                 String.valueOf(kakaoProfile.getId()), signUpRequest.getProvider());
 
         if (user.isPresent())
             throw new CUserExistException();
 
         User inUser = User.builder()
-                .uid(String.valueOf(kakaoProfile.getId()))
+                .socialId(String.valueOf(kakaoProfile.getId()))
                 .provider(signUpRequest.getProvider())
                 .name(signUpRequest.getName())
                 .roles(Collections.singletonList("ROLE_USER"))

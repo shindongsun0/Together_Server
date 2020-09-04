@@ -1,4 +1,4 @@
-package com.together.smwu.domain.groupEnrollment.dto;
+package com.together.smwu.domain.roomEnrollment.dto;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -7,8 +7,8 @@ import javax.validation.constraints.NotNull;
 
 @Getter
 @NoArgsConstructor
-public class GroupEnrollmentRequestDto {
+public class RoomEnrollmentRequestDto {
 
     @NotNull
-    private Long groupId;
+    private Long roomId;
 }
