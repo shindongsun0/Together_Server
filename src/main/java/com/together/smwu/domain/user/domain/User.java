@@ -21,11 +21,12 @@ import java.util.stream.Collectors;
 @Table(name = "USER")
 public class User implements UserDetails {
     @Id
+    @Column(nullable = false, name = "id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long msrl;
+    private long userId;
 
-    @Column(nullable = false, unique = true, length = 50)
-    private String uid;
+    @Column(name = "social_id", nullable = false, unique = true, length = 50)
+    private String socialId;
 
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     @Column(length = 100)
@@ -53,7 +54,7 @@ public class User implements UserDetails {
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     @Override
     public String getUsername() {
-        return this.uid;
+        return this.socialId;
     }
 
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
