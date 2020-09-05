@@ -17,6 +17,7 @@ import java.util.List;
 
 @PreAuthorize("hasRole('ROLE_USER')")
 @Api(tags = {"3.Room"})
+@RequestMapping("/api/room")
 @RestController
 public class RoomController {
     public static final String ROOM_URI = "/api/room";
@@ -28,7 +29,7 @@ public class RoomController {
     }
 
     @ApiOperation(value = "Room 생성", notes = "Room을 생성한다")
-    @PostMapping(ROOM_URI)
+    @PostMapping
     public ResponseEntity<Void> createRoom(
             @RequestBody RoomRequest request,
             @CurrentUser User user) {
@@ -39,7 +40,7 @@ public class RoomController {
     }
 
     @ApiOperation(value = "Room 수정", notes = "Room을 수정한다.")
-    @PutMapping("/api/room/{roomId}")
+    @PutMapping("/{roomId}")
     public ResponseEntity<Void> updateRoom(
             @ApiParam(value = "roomId", required = true) @PathVariable Long roomId,
             @RequestBody RoomRequest request,
@@ -49,7 +50,7 @@ public class RoomController {
     }
 
     @ApiOperation(value = "Room 찾기", notes = "Room을 roomTitle로 찾는다.")
-    @GetMapping("/api/room")
+    @GetMapping
     public ResponseEntity<List<RoomResponse>> findByTitle(
             @ApiParam(value = "title", required = true) @RequestParam String title,
             @CurrentUser User user) {
@@ -58,7 +59,7 @@ public class RoomController {
     }
 
     @ApiOperation(value = "Room 찾기", notes = "Room을 roomId로 찾는다.")
-    @GetMapping("/api/room/{roomId}")
+    @GetMapping("/{roomId}")
     public ResponseEntity<RoomResponse> findByTitle(
             @ApiParam(value = "title", required = true) @PathVariable Long roomId,
             @CurrentUser User user) {
@@ -66,16 +67,8 @@ public class RoomController {
         return ResponseEntity.ok(roomResponse);
     }
 
-    @ApiOperation(value = "모든 Room 조회", notes = "모든 Room을 조회한다.")
-    @GetMapping("/api/room/all")
-    public ResponseEntity<List<RoomResponse>> findAllRooms(
-            @CurrentUser User user) {
-        List<RoomResponse> roomRespons = roomService.findAllRooms();
-        return ResponseEntity.ok(roomRespons);
-    }
-
     @ApiOperation(value = "Room 삭제", notes = "Room을 roomId로 삭제한다.")
-    @DeleteMapping("/api/room/{roomId}")
+    @DeleteMapping("/{roomId}")
     public ResponseEntity<Void> deleteRoomById(
             @ApiParam(value = "roomId", required = true) @PathVariable Long roomId,
             @CurrentUser User user) {
