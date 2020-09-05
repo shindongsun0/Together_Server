@@ -5,7 +5,7 @@ import lombok.Getter;
 
 @Getter
 @Builder
-public class RoomEnrollmentDeleteResponseDto {
+public class RoomEnrollmentDeleteResponse {
 
     private Long roomId;
     private Long userId;
