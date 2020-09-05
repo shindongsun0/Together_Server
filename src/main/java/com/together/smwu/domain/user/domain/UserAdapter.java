@@ -26,7 +26,7 @@ public class UserAdapter implements UserDetails {
         List<GrantedAuthority> authorities = Collections.singletonList(new SimpleGrantedAuthority("ROLE_USER"));
 
         return new UserAdapter(
-                user.getMsrl(),
+                user.getUserId(),
                 user.getName(),
                 authorities
         );

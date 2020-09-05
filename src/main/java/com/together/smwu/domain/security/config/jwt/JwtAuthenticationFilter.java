@@ -16,7 +16,7 @@ import java.util.Arrays;
 public class JwtAuthenticationFilter extends GenericFilterBean {
 
     private static final String JWT_COOKIE_NAME = "X-AUTH-TOKEN";
-    private JwtTokenProvider jwtTokenProvider;
+    private final JwtTokenProvider jwtTokenProvider;
 
     public JwtAuthenticationFilter(JwtTokenProvider jwtTokenProvider) {
         this.jwtTokenProvider = jwtTokenProvider;

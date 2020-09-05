@@ -1,6 +1,7 @@
 package com.together.smwu.domain.user.domain;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.together.smwu.domain.roomEnrollment.domain.RoomEnrollment;
 import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -21,11 +22,12 @@ import java.util.stream.Collectors;
 @Table(name = "USER")
 public class User implements UserDetails {
     @Id
+    @Column(nullable = false, name = "id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long msrl;
+    private long userId;
 
-    @Column(nullable = false, unique = true, length = 50)
-    private String uid;
+    @Column(name = "social_id", nullable = false, unique = true, length = 50)
+    private String socialId;
 
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     @Column(length = 100)
@@ -40,6 +42,9 @@ public class User implements UserDetails {
     @Column(name = "profile_image", length = 150)
     private String profileImage;
 
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "user", cascade = CascadeType.ALL)
+    private final List<RoomEnrollment> roomEnrollments = new ArrayList<>();
+
     @ElementCollection(fetch = FetchType.EAGER)
     @CollectionTable(name = "USER_ROLES")
     @Builder.Default
@@ -53,7 +58,7 @@ public class User implements UserDetails {
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     @Override
     public String getUsername() {
-        return this.uid;
+        return this.socialId;
     }
 
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)

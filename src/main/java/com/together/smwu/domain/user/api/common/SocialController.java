@@ -1,6 +1,5 @@
 package com.together.smwu.domain.user.api.common;
 
-import com.google.gson.Gson;
 import com.together.smwu.domain.user.application.social.KakaoService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -9,7 +8,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.client.RestTemplate;
 import org.springframework.web.servlet.ModelAndView;
 
 @RequiredArgsConstructor
@@ -18,8 +16,6 @@ import org.springframework.web.servlet.ModelAndView;
 public class SocialController {
 
     private final Environment env;
-    private final RestTemplate restTemplate;
-    private final Gson gson;
     private final KakaoService kakaoService;
 
     @Value("${spring.url.base}")
