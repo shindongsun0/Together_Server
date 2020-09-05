@@ -1,13 +1,13 @@
 package com.together.smwu.domain.user.api;
 
-import com.together.smwu.advice.exception.CUserNotFoundException;
-import com.together.smwu.config.security.CurrentUser;
-import com.together.smwu.security.config.jwt.JwtTokenProvider;
+import com.together.smwu.global.advice.exception.CUserNotFoundException;
+import com.together.smwu.domain.security.security.CurrentUser;
+import com.together.smwu.domain.security.config.jwt.JwtTokenProvider;
 import com.together.smwu.domain.user.dto.request.UserRequest;
 import com.together.smwu.domain.user.dto.response.CommonResult;
 import com.together.smwu.domain.user.dto.response.ListResult;
 import com.together.smwu.domain.user.dto.response.SingleResult;
-import com.together.smwu.security.service.ResponseService;
+import com.together.smwu.domain.security.service.ResponseService;
 import com.together.smwu.domain.user.domain.User;
 import com.together.smwu.domain.user.dao.UserRepository;
 import io.swagger.annotations.Api;
@@ -44,7 +44,7 @@ public class UserController {
     @GetMapping(value = "/user")
     public SingleResult<User> findUserById(@CurrentUser User user) {
 
-        return responseService.getSingleResult(userRepository.findByUid(user.getUid())
+        return responseService.getSingleResult(userRepository.findBySocialId(user.getSocialId())
                 .orElseThrow(CUserNotFoundException::new));
     }
 
@@ -59,11 +59,11 @@ public class UserController {
     }
 
     @ApiOperation(value = "회원 삭제", notes = "userId로 회원정보를 삭제한다")
-    @DeleteMapping(value = "/user/{msrl}")
+    @DeleteMapping(value = "/user/{userId}")
     public CommonResult delete(
-            @ApiParam(value = "회원번호", required = true) @PathVariable long msrl,
+            @ApiParam(value = "회원번호", required = true) @PathVariable long userId,
             @CurrentUser User user) {
-        userRepository.deleteById(msrl);
+        userRepository.deleteById(userId);
         // 성공 결과 정보만 필요한경우 getSuccessResult()를 이용하여 결과를 출력한다.
         return responseService.getSuccessResult();
     }

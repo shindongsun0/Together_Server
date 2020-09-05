@@ -1,10 +1,10 @@
 package com.together.smwu.domain.user.application.social;
 
 import com.google.gson.Gson;
-import com.together.smwu.advice.exception.CCommunicationException;
 import com.together.smwu.domain.user.dto.social.KakaoProfile;
 import com.together.smwu.domain.user.dto.social.RetKakaoAuth;
-import lombok.RequiredArgsConstructor;
+import com.together.smwu.global.advice.exception.CCommunicationException;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.env.Environment;
 import org.springframework.http.*;
@@ -16,14 +16,19 @@ import org.springframework.web.client.RestTemplate;
 
 import java.util.Objects;
 
-@RequiredArgsConstructor
 @Service
-public class KakaoService{
+public class  KakaoService{
 
     private final RestTemplate restTemplate;
     private final Environment env;
     private final Gson gson;
 
+    public KakaoService(@Qualifier("getRestTemplate") RestTemplate restTemplate, Environment env, Gson gson){
+        this.restTemplate = restTemplate;
+        this.env = env;
+        this.gson = gson;
+    }
+    
     @Value("${spring.url.base}")
     private String baseUrl;
 
