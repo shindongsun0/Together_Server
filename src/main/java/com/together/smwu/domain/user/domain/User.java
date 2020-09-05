@@ -1,6 +1,7 @@
 package com.together.smwu.domain.user.domain;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.together.smwu.domain.roomEnrollment.domain.RoomEnrollment;
 import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -40,6 +41,9 @@ public class User implements UserDetails {
 
     @Column(name = "profile_image", length = 150)
     private String profileImage;
+
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "user", cascade = CascadeType.ALL)
+    private final List<RoomEnrollment> roomEnrollments = new ArrayList<>();
 
     @ElementCollection(fetch = FetchType.EAGER)
     @CollectionTable(name = "USER_ROLES")
