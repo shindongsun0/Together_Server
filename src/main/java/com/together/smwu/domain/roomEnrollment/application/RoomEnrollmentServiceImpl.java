@@ -5,8 +5,10 @@ import com.together.smwu.domain.room.domain.Room;
 import com.together.smwu.domain.room.exception.RoomNotFoundException;
 import com.together.smwu.domain.roomEnrollment.dao.RoomEnrollmentRepository;
 import com.together.smwu.domain.roomEnrollment.domain.RoomEnrollment;
-import com.together.smwu.domain.roomEnrollment.dto.RoomEnrollmentRequestDto;
-import com.together.smwu.domain.roomEnrollment.dto.RoomEnrollmentResponseDto;
+import com.together.smwu.domain.roomEnrollment.dto.RoomEnrollmentRequest;
+import com.together.smwu.domain.roomEnrollment.dto.RoomEnrollmentResponse;
+import com.together.smwu.domain.roomEnrollment.exception.RoomAlreadyEnrollException;
+import com.together.smwu.domain.roomEnrollment.exception.RoomNotAuthorizedException;
 import com.together.smwu.domain.roomEnrollment.exception.RoomUserMismatchException;
 import com.together.smwu.domain.user.dao.UserRepository;
 import com.together.smwu.domain.user.domain.User;
@@ -34,29 +36,45 @@ public class RoomEnrollmentServiceImpl implements RoomEnrollmentService {
     /**
      * room에 참여한다. 이 메소드는 방장이 아닌 새 User가 그룹에 참여할 때 불린다.
      *
-     * @param requestDto room, user, credential
+     * @param request room, user, credential
      * @return true: 등록성공
      */
     @Transactional
-    public Long enroll(RoomEnrollmentRequestDto requestDto, User user) {
-
-        RoomEnrollment roomEnrollment = convertToRoomEnrollment(requestDto, user);
-
-        // check if is already exists.
-        roomEnrollmentRepository
-                .findByUserAndRoom(roomEnrollment.getUser(), roomEnrollment.getRoom())
-                .orElseThrow(RoomUserMismatchException::new);
-
+    public Long enroll(RoomEnrollmentRequest request, User user) {
+        RoomEnrollment roomEnrollment = convertToRoomEnrollment(request, user);
+        checkIfAlreadyEnrolled(roomEnrollment);
+        checkRoomCredential(request);
         roomEnrollmentRepository.save(roomEnrollment);
-
         return roomEnrollment.getRoomEnrollmentId();
     }
 
-    private RoomEnrollment convertToRoomEnrollment(RoomEnrollmentRequestDto request, User user) {
+    private void checkIfAlreadyEnrolled(RoomEnrollment roomEnrollment) {
+        boolean isExistingEnrollment = roomEnrollmentRepository
+                .findByUserAndRoom(roomEnrollment.getUser(), roomEnrollment.getRoom())
+                .isPresent();
+        if (isExistingEnrollment) {
+            throw new RoomAlreadyEnrollException();
+        }
+    }
+
+    private void checkRoomCredential(RoomEnrollmentRequest request) {
         Room room = roomRepository.findById(request.getRoomId())
                 .orElseThrow(RoomNotFoundException::new);
 
-        boolean isMasterUser = checkIsMasterUser(room, user);
+        boolean hasCredential = room.getCredential().isEmpty();
+        if (hasCredential) {
+            if (!request.getCredential().equals(room.getCredential())) {
+                throw new RoomNotAuthorizedException();
+            }
+        }
+
+    }
+
+    private RoomEnrollment convertToRoomEnrollment(RoomEnrollmentRequest request, User user) {
+        Room room = roomRepository.findById(request.getRoomId())
+                .orElseThrow(RoomNotFoundException::new);
+
+        boolean isMasterUser = checkIsMasterUser(room);
 
         return RoomEnrollment.builder()
                 .room(room)
@@ -65,7 +83,7 @@ public class RoomEnrollmentServiceImpl implements RoomEnrollmentService {
                 .build();
     }
 
-    private boolean checkIsMasterUser(Room room, User user) {
+    private boolean checkIsMasterUser(Room room) {
         return roomEnrollmentRepository.findAllByRoom(room).isEmpty();
     }
 
@@ -73,22 +91,19 @@ public class RoomEnrollmentServiceImpl implements RoomEnrollmentService {
      * room을 삭제하거나 모두 강퇴시킨다.
      *
      * @param roomId 어떤 room
-     * @param user    방장인지 확인하기 위함.
+     * @param user   방장인지 확인하기 위함.
      */
     @Transactional
     public void deleteAllUsers(long roomId, User user) {
-
-        //존재하는 room 인지 확인한다.
-        roomRepository.findById(roomId)
+        Room room = roomRepository.findById(roomId)
                 .orElseThrow(RoomNotFoundException::new);
 
-        //방장(master) 인지 확인한다.
         RoomEnrollment roomEnrollment = roomEnrollmentRepository
                 .findByUserAndRoom(user, roomRepository.getOne(roomId))
                 .orElseThrow(RoomUserMismatchException::new);
 
         if (roomEnrollment.getIsMaster()) {
-            roomEnrollmentRepository.deleteAllByRoomId(roomId);
+            roomEnrollmentRepository.deleteAllByRoom(room);
         } else {
             throw new IllegalArgumentException("The user does not have permission to delete the room.");
         }
@@ -123,7 +138,7 @@ public class RoomEnrollmentServiceImpl implements RoomEnrollmentService {
      * @return 해당 그룹의 전체 enroll 정보를 가져온다.
      */
     @Transactional
-    public List<RoomEnrollmentResponseDto> findAllByRoomId(long roomId) {
+    public List<RoomEnrollmentResponse> findAllByRoomId(long roomId) {
 
         //room
         Room room = roomRepository.findById(roomId)
@@ -132,7 +147,7 @@ public class RoomEnrollmentServiceImpl implements RoomEnrollmentService {
         //find all roomEnrollments by room
         return roomEnrollmentRepository.findAllByRoom(room)
                 .stream()
-                .map(RoomEnrollmentResponseDto::new)
+                .map(RoomEnrollmentResponse::new)
                 .collect(Collectors.toList());
     }
 
@@ -143,7 +158,7 @@ public class RoomEnrollmentServiceImpl implements RoomEnrollmentService {
      * @return
      */
     @Transactional
-    public List<RoomEnrollmentResponseDto> findAllByUser(long userId) {
+    public List<RoomEnrollmentResponse> findAllByUser(long userId) {
 
         //user
         User user = userRepository.findById(userId)
@@ -152,17 +167,17 @@ public class RoomEnrollmentServiceImpl implements RoomEnrollmentService {
         //find all roomEnrollments by user
         return roomEnrollmentRepository.findAllByUser(user)
                 .stream()
-                .map(RoomEnrollmentResponseDto::new)
+                .map(RoomEnrollmentResponse::new)
                 .collect(Collectors.toList());
     }
 
     @Transactional
-    public RoomEnrollmentResponseDto findById(long id) {
+    public RoomEnrollmentResponse findById(long id) {
 
         RoomEnrollment roomEnrollment = roomEnrollmentRepository.findById(id)
                 .orElseThrow(RoomUserMismatchException::new);
 
-        return new RoomEnrollmentResponseDto(roomEnrollment);
+        return new RoomEnrollmentResponse(roomEnrollment);
     }
 
 }

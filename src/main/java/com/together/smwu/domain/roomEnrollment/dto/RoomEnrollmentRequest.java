@@ -7,8 +7,15 @@ import javax.validation.constraints.NotNull;
 
 @Getter
 @NoArgsConstructor
-public class RoomEnrollmentRequestDto {
+public class RoomEnrollmentRequest {
 
     @NotNull
     private Long roomId;
+
+    private String credential;
+
+    public RoomEnrollmentRequest(Long roomId, String credential) {
+        this.roomId = roomId;
+        this.credential = credential;
+    }
 }

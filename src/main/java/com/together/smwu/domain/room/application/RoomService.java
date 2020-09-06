@@ -8,7 +8,7 @@ import java.util.List;
 
 public interface RoomService {
 
-    Long create(RoomRequest requestDto, User user);
+    Long create(RoomRequest request, User user);
 
     void update(Long roomId, RoomRequest request, User user);
 

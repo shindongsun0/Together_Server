@@ -1,5 +1,6 @@
 package com.together.smwu.domain.room.domain;
 
+import com.together.smwu.domain.roomEnrollment.domain.RoomEnrollment;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -8,6 +9,8 @@ import org.hibernate.annotations.CreationTimestamp;
 import javax.persistence.*;
 import javax.validation.constraints.Size;
 import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.List;
 
 @Getter
 @Entity
@@ -38,8 +41,9 @@ public class Room {
     @Column(name = "created_time", nullable = false)
     private Timestamp createdTime;
 
-<<<<<<< Updated upstream:src/main/java/com/together/smwu/domain/group/domain/Group.java
-=======
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "room", cascade = CascadeType.ALL, orphanRemoval = true)
+    private final List<RoomEnrollment> roomEnrollments = new ArrayList<>();
+
     public void update(Room room) {
         this.title = room.title;
         this.content = room.content;
@@ -47,7 +51,6 @@ public class Room {
         this.credential = room.credential;
     }
 
->>>>>>> Stashed changes:src/main/java/com/together/smwu/domain/room/domain/Room.java
     @Builder
     public Room(String title, String content, String imageUrl,
                 String credential) {

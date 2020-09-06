@@ -27,7 +27,7 @@ public class RoomServiceImpl implements RoomService {
 
     public Long create(RoomRequest request, User user) {
         Room room = roomRepository.save(request.toRoomEntity());
-//        enrollRoomWithMasterUser(user, room);
+        enrollRoomWithMasterUser(user, room);
         return room.getId();
     }
 
@@ -65,9 +65,9 @@ public class RoomServiceImpl implements RoomService {
 
     @Transactional
     public void deleteRoomById(Long roomId, User user) {
+        roomEnrollmentRepository.deleteAllByRoomId(roomId);
         Room authorizedRoom = findRoomIfAuthorized(roomId, user.getUserId());
         roomRepository.delete(authorizedRoom);
-        roomEnrollmentRepository.deleteAllByRoomId(roomId);
     }
 
     private void enrollRoomWithMasterUser(User user, Room room) {
@@ -88,7 +88,7 @@ public class RoomServiceImpl implements RoomService {
         Room room = roomRepository.findById(roomId)
                 .orElseThrow(RoomNotFoundException::new);
 
-        if (!roomEnrollmentRepository.checkIfMasterOfRoom(userId, roomId)) {
+        if (!roomEnrollmentRepository.checkIsMasterOfRoom(userId, roomId)) {
             throw new RoomNotAuthorizedException();
         }
 

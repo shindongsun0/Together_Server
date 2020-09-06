@@ -5,14 +5,20 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import javax.validation.constraints.NotNull;
+
 @Getter
 @NoArgsConstructor(access = AccessLevel.PACKAGE)
 public class RoomRequest {
     private final String BASE_IMAGE_URL = "https://together-user-thumbnail.s3.ap-northeast-2.amazonaws.com/static/up.png";
 
+    @NotNull
     private String title;
+
     private String content;
+
     private String imageUrl;
+
     private String credential;
 
 
@@ -25,7 +31,7 @@ public class RoomRequest {
     }
 
     public Room toRoomEntity() {
-        if (imageUrl.isEmpty()) {
+        if (null == imageUrl) {
             imageUrl = BASE_IMAGE_URL;
         }
         return Room.builder()
