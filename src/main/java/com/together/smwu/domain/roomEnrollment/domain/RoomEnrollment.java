@@ -15,7 +15,10 @@ import java.sql.Timestamp;
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "ROOM_ENROLLMENT")
+@Table(
+        name = "ROOM_ENROLLMENT",
+        uniqueConstraints = {@UniqueConstraint(columnNames = {"user_id", "room_id"})}
+)
 public class RoomEnrollment {
 
     @Id
@@ -39,7 +42,7 @@ public class RoomEnrollment {
     Boolean isMaster;
 
     @Builder
-    public RoomEnrollment(Room room, User user, Boolean isMaster){
+    public RoomEnrollment(Room room, User user, Boolean isMaster) {
         this.room = room;
         this.user = user;
         this.isMaster = isMaster;

@@ -6,7 +6,7 @@ import lombok.Getter;
 import java.sql.Timestamp;
 
 @Getter
-public class RoomEnrollmentResponseDto {
+public class RoomEnrollmentResponse {
 
     private Long roomEnrollmentId;
     private Long roomId;
@@ -14,7 +14,7 @@ public class RoomEnrollmentResponseDto {
     private Timestamp enrolledAt;
     private Boolean isMaster;
 
-    public RoomEnrollmentResponseDto(RoomEnrollment entity){
+    public RoomEnrollmentResponse(RoomEnrollment entity){
         this.roomEnrollmentId = entity.getRoomEnrollmentId();
         this.roomId = entity.getRoom().getId();
         this.userId = entity.getUser().getUserId();
