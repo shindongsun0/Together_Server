@@ -20,7 +20,7 @@ import java.util.List;
 @RequestMapping("/api/enroll")
 @RestController
 public class RoomEnrollmentController {
-    public static final String ROOM_ENROLL_URI = "/api/room/enroll";
+    public static final String ROOM_ENROLL_URI = "/api/enroll";
 
     private final RoomEnrollmentService roomEnrollmentService;
 

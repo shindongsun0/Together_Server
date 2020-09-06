@@ -7,6 +7,7 @@ import com.together.smwu.domain.roomEnrollment.dao.RoomEnrollmentRepository;
 import com.together.smwu.domain.roomEnrollment.domain.RoomEnrollment;
 import com.together.smwu.domain.roomEnrollment.dto.RoomEnrollmentRequest;
 import com.together.smwu.domain.roomEnrollment.dto.RoomEnrollmentResponse;
+import com.together.smwu.domain.roomEnrollment.exception.RoomAlreadyEnrollException;
 import com.together.smwu.domain.roomEnrollment.exception.RoomNotAuthorizedException;
 import com.together.smwu.domain.roomEnrollment.exception.RoomUserMismatchException;
 import com.together.smwu.domain.user.dao.UserRepository;
@@ -40,19 +41,20 @@ public class RoomEnrollmentServiceImpl implements RoomEnrollmentService {
      */
     @Transactional
     public Long enroll(RoomEnrollmentRequest request, User user) {
-
         RoomEnrollment roomEnrollment = convertToRoomEnrollment(request, user);
-
-        // check if is already exists.
-        roomEnrollmentRepository
-                .findByUserAndRoom(roomEnrollment.getUser(), roomEnrollment.getRoom())
-                .orElseThrow(RoomUserMismatchException::new);
-
+        checkIfAlreadyEnrolled(roomEnrollment);
         checkRoomCredential(request);
-
         roomEnrollmentRepository.save(roomEnrollment);
-
         return roomEnrollment.getRoomEnrollmentId();
+    }
+
+    private void checkIfAlreadyEnrolled(RoomEnrollment roomEnrollment) {
+        boolean isExistingEnrollment = roomEnrollmentRepository
+                .findByUserAndRoom(roomEnrollment.getUser(), roomEnrollment.getRoom())
+                .isPresent();
+        if (isExistingEnrollment) {
+            throw new RoomAlreadyEnrollException();
+        }
     }
 
     private void checkRoomCredential(RoomEnrollmentRequest request) {
@@ -93,18 +95,14 @@ public class RoomEnrollmentServiceImpl implements RoomEnrollmentService {
      */
     @Transactional
     public void deleteAllUsers(long roomId, User user) {
-
-        //존재하는 room 인지 확인한다.
         Room room = roomRepository.findById(roomId)
                 .orElseThrow(RoomNotFoundException::new);
 
-        //방장(master) 인지 확인한다.
         RoomEnrollment roomEnrollment = roomEnrollmentRepository
                 .findByUserAndRoom(user, roomRepository.getOne(roomId))
                 .orElseThrow(RoomUserMismatchException::new);
 
         if (roomEnrollment.getIsMaster()) {
-//            roomEnrollmentRepository.deleteAllByRoomId(roomId);
             roomEnrollmentRepository.deleteAllByRoom(room);
         } else {
             throw new IllegalArgumentException("The user does not have permission to delete the room.");

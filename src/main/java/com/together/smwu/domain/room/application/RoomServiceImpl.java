@@ -88,7 +88,7 @@ public class RoomServiceImpl implements RoomService {
         Room room = roomRepository.findById(roomId)
                 .orElseThrow(RoomNotFoundException::new);
 
-        if (!roomEnrollmentRepository.checkIfMasterOfRoom(userId, roomId)) {
+        if (!roomEnrollmentRepository.checkIsMasterOfRoom(userId, roomId)) {
             throw new RoomNotAuthorizedException();
         }
 
