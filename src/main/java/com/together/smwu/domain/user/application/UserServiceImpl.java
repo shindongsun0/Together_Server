@@ -93,7 +93,7 @@ public class UserServiceImpl implements UserService {
                 .roles(Collections.singletonList("ROLE_USER"))
                 .build();
 
-        if(signUpRequest.getProfileImage().isEmpty()){
+        if(null == signUpRequest.getProfileImage()){
             String DEFAULT_USER_IMAGE = "https://together-user-thumbnail.s3.ap-northeast-2.amazonaws.com/static/default_userImage.png";
             inUser.setProfileImage(DEFAULT_USER_IMAGE);
         }else{
