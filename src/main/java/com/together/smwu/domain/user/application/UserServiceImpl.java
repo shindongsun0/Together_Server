@@ -55,7 +55,7 @@ public class UserServiceImpl implements UserService {
         // Valid한 토큰이 아니라면 Cookie에 새로운 토큰을 넣는다.
         if(!accessTokenValid){
             String newJwtToken = jwtTokenProvider.createToken(String.valueOf(user.getUserId()), user.getRoles());
-            CookieUtil.create(response, COOKIE_NAME, newJwtToken, false, TOKEN_VALID_MILLISECOND, "*");
+            CookieUtil.create(response, COOKIE_NAME, newJwtToken, true, TOKEN_VALID_MILLISECOND, "*");
         }
 
         return new LoginResponse(LoginResponse.Status.SUCCESS,
