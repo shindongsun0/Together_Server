@@ -13,20 +13,22 @@ import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.util.Arrays;
 
-public class JwtAuthenticationFilter extends GenericFilterBean {
+public class CookieAuthenticationFilter extends GenericFilterBean {
 
     private static final String JWT_COOKIE_NAME = "X-AUTH-TOKEN";
     private final JwtTokenProvider jwtTokenProvider;
 
-    public JwtAuthenticationFilter(JwtTokenProvider jwtTokenProvider) {
+    public CookieAuthenticationFilter(JwtTokenProvider jwtTokenProvider) {
         this.jwtTokenProvider = jwtTokenProvider;
     }
+
 
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain filterChain)
             throws IOException, ServletException {
+        HttpServletRequest httpServletRequest = (HttpServletRequest) request;
         try {
-            String token = getJwtTokenFromCookie(request);
+            String token = getJwtTokenFromCookie(httpServletRequest);
             if (null != token && jwtTokenProvider.validateToken(token)) {
                 Authentication auth = jwtTokenProvider.getAuthentication(token);
                 SecurityContextHolder.getContext().setAuthentication(auth);
@@ -43,10 +45,9 @@ public class JwtAuthenticationFilter extends GenericFilterBean {
      * @param request incoming HTTP Request
      * @return JWT, or {@code null} if no token was found
      */
-    private String getJwtTokenFromCookie(ServletRequest request) {
-        HttpServletRequest httpServletRequest = (HttpServletRequest) request;
-        if (null != httpServletRequest.getCookies()) {
-            return Arrays.stream(httpServletRequest.getCookies())
+    private String getJwtTokenFromCookie(HttpServletRequest request) {
+        if (null != request.getCookies()) {
+            return Arrays.stream(request.getCookies())
                     .filter(cookie -> cookie.getName().equals(JWT_COOKIE_NAME))
                     .map(Cookie::getValue)
                     .findAny()

@@ -1,7 +1,7 @@
 package com.together.smwu.domain.security.config;
 
 import com.together.smwu.domain.security.config.handler.CustomAccessDeniedHandler;
-import com.together.smwu.domain.security.config.jwt.JwtAuthenticationFilter;
+import com.together.smwu.domain.security.config.jwt.CookieAuthenticationFilter;
 import com.together.smwu.domain.security.config.jwt.JwtTokenProvider;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -44,8 +44,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .and()
                 .exceptionHandling().authenticationEntryPoint(new CustomAuthenticationEntryPoint())
                 .and()
-                .addFilterBefore(new JwtAuthenticationFilter(jwtTokenProvider), UsernamePasswordAuthenticationFilter.class); // jwt token 필터를 id/password 인증 필터 전에 넣어라.
-
+                .addFilterBefore(new CookieAuthenticationFilter(jwtTokenProvider), UsernamePasswordAuthenticationFilter.class); // jwt token 필터를 id/password 인증 필터 전에 넣어라
     }
 
     @Override
