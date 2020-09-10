@@ -6,11 +6,8 @@ import com.together.smwu.domain.user.domain.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
-import java.util.Optional;
 
 public interface RoomEnrollmentRepository extends JpaRepository<RoomEnrollment, Long>, RoomEnrollmentRepositoryCustom {
-
-    Optional<RoomEnrollment> findByUserAndRoom(User user, Room room);
 
     List<RoomEnrollment> findAllByUser(User user);
 

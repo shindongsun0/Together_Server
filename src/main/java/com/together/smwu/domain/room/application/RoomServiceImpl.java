@@ -5,9 +5,10 @@ import com.together.smwu.domain.room.domain.Room;
 import com.together.smwu.domain.room.dto.RoomRequest;
 import com.together.smwu.domain.room.dto.RoomResponse;
 import com.together.smwu.domain.room.exception.RoomNotFoundException;
+import com.together.smwu.domain.roomEnrollment.application.RoomEnrollmentService;
 import com.together.smwu.domain.roomEnrollment.dao.RoomEnrollmentRepository;
 import com.together.smwu.domain.roomEnrollment.domain.RoomEnrollment;
-import com.together.smwu.domain.roomEnrollment.exception.RoomNotAuthorizedException;
+import com.together.smwu.domain.roomEnrollment.exception.RoomUserMismatchException;
 import com.together.smwu.domain.user.domain.User;
 import org.springframework.stereotype.Service;
 
@@ -19,25 +20,25 @@ public class RoomServiceImpl implements RoomService {
 
     private final RoomRepository roomRepository;
     private final RoomEnrollmentRepository roomEnrollmentRepository;
+    private final RoomEnrollmentService roomEnrollmentService;
 
-    public RoomServiceImpl(RoomRepository roomRepository, RoomEnrollmentRepository roomEnrollmentRepository) {
+    public RoomServiceImpl(RoomRepository roomRepository, RoomEnrollmentRepository roomEnrollmentRepository, RoomEnrollmentService roomEnrollmentService) {
         this.roomRepository = roomRepository;
         this.roomEnrollmentRepository = roomEnrollmentRepository;
+        this.roomEnrollmentService = roomEnrollmentService;
     }
 
     public Long create(RoomRequest request, User user) {
-        Room room = roomRepository.save(request.toRoomEntity());
+        Room room = request.toRoomEntity();
         enrollRoomWithMasterUser(user, room);
+        roomRepository.save(room);
         return room.getId();
     }
 
-    /*
-    - findAllRooms(): 모든 room조회 [/all]
-    - deleteRoomById(Long id): room삭제 → roomEnrollment의 deleteRoom호출
-     */
     @Transactional
     public void update(Long roomId, RoomRequest request, User user) {
-        Room room = findRoomIfAuthorized(roomId, user.getUserId());
+        Room room = roomRepository.findById(roomId)
+                .orElseThrow(RoomNotFoundException::new);
         room.update(request.toRoomEntity());
         roomRepository.save(room);
     }
@@ -65,9 +66,14 @@ public class RoomServiceImpl implements RoomService {
 
     @Transactional
     public void deleteRoomById(Long roomId, User user) {
-        roomEnrollmentRepository.deleteAllByRoomId(roomId);
-        Room authorizedRoom = findRoomIfAuthorized(roomId, user.getUserId());
-        roomRepository.delete(authorizedRoom);
+        Room authorizedRoom = roomRepository.findById(roomId)
+                .orElseThrow(RoomNotFoundException::new);
+        RoomEnrollment roomEnrollment = roomEnrollmentRepository.findByUserAndRoom(user.getUserId(), roomId)
+                .orElseThrow(RoomUserMismatchException::new);
+        if(roomEnrollment.getIsMaster()){
+            roomRepository.deleteById(authorizedRoom.getId());
+        }
+//        roomEnrollmentService.deleteAllUsers(roomEnrollment.getRoomEnrollmentId());
     }
 
     private void enrollRoomWithMasterUser(User user, Room room) {
@@ -76,22 +82,11 @@ public class RoomServiceImpl implements RoomService {
                 .user(user)
                 .isMaster(true)
                 .build();
-        roomEnrollmentRepository.save(roomEnrollment);
+        room.getRoomEnrollments().add(roomEnrollment);
     }
 
     private Room findById(Long id) {
         return roomRepository.findById(id)
                 .orElseThrow(RoomNotFoundException::new);
-    }
-
-    private Room findRoomIfAuthorized(Long roomId, Long userId) {
-        Room room = roomRepository.findById(roomId)
-                .orElseThrow(RoomNotFoundException::new);
-
-        if (!roomEnrollmentRepository.checkIsMasterOfRoom(userId, roomId)) {
-            throw new RoomNotAuthorizedException();
-        }
-
-        return room;
     }
 }

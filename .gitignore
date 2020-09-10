@@ -40,3 +40,4 @@ out/
 # Directories #
 /bin/
 .idea/
+/keystore.p12

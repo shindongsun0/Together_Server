@@ -50,7 +50,7 @@ public class RoomEnrollmentServiceImpl implements RoomEnrollmentService {
 
     private void checkIfAlreadyEnrolled(RoomEnrollment roomEnrollment) {
         boolean isExistingEnrollment = roomEnrollmentRepository
-                .findByUserAndRoom(roomEnrollment.getUser(), roomEnrollment.getRoom())
+                .findByUserAndRoom(roomEnrollment.getUser().getUserId(), roomEnrollment.getRoom().getId())
                 .isPresent();
         if (isExistingEnrollment) {
             throw new RoomAlreadyEnrollException();
@@ -94,14 +94,11 @@ public class RoomEnrollmentServiceImpl implements RoomEnrollmentService {
      * @param user   방장인지 확인하기 위함.
      */
     @Transactional
-    public void deleteAllUsers(long roomId, User user) {
-        Room room = roomRepository.findById(roomId)
-                .orElseThrow(RoomNotFoundException::new);
-
-        RoomEnrollment roomEnrollment = roomEnrollmentRepository
-                .findByUserAndRoom(user, roomRepository.getOne(roomId))
+    public void deleteAllUsers(Long roomId, User user) {
+        RoomEnrollment roomEnrollment = roomEnrollmentRepository.findByUserAndRoom(user.getUserId(), roomId)
                 .orElseThrow(RoomUserMismatchException::new);
-
+        Room room = roomRepository.findById(roomEnrollment.getRoom().getId())
+                .orElseThrow(RoomNotFoundException::new);
         if (roomEnrollment.getIsMaster()) {
             roomEnrollmentRepository.deleteAllByRoom(room);
         } else {
@@ -117,15 +114,10 @@ public class RoomEnrollmentServiceImpl implements RoomEnrollmentService {
      * @param user
      */
     @Transactional
-    public void deleteUserFromRoom(long roomId, User user) {
-
-        Room room = roomRepository.findById(roomId)
-                .orElseThrow(RoomNotFoundException::new);
-
-        RoomEnrollment roomEnrollment = roomEnrollmentRepository.findByUserAndRoom(user, room)
+    public void deleteUserFromRoom(Long roomId, User user) {
+        RoomEnrollment roomEnrollment = roomEnrollmentRepository.findByUserAndRoom(user.getUserId(), roomId)
                 .orElseThrow(RoomUserMismatchException::new);
-
-        long roomEnrollmentId = roomEnrollment.getRoomEnrollmentId();
+        Long roomEnrollmentId = roomEnrollment.getRoomEnrollmentId();
 
         roomEnrollmentRepository.deleteById(roomEnrollmentId);
     }
@@ -138,7 +130,7 @@ public class RoomEnrollmentServiceImpl implements RoomEnrollmentService {
      * @return 해당 그룹의 전체 enroll 정보를 가져온다.
      */
     @Transactional
-    public List<RoomEnrollmentResponse> findAllByRoomId(long roomId) {
+    public List<RoomEnrollmentResponse> findAllByRoomId(Long roomId) {
 
         //room
         Room room = roomRepository.findById(roomId)
@@ -158,7 +150,7 @@ public class RoomEnrollmentServiceImpl implements RoomEnrollmentService {
      * @return
      */
     @Transactional
-    public List<RoomEnrollmentResponse> findAllByUser(long userId) {
+    public List<RoomEnrollmentResponse> findAllByUser(Long userId) {
 
         //user
         User user = userRepository.findById(userId)
@@ -172,11 +164,18 @@ public class RoomEnrollmentServiceImpl implements RoomEnrollmentService {
     }
 
     @Transactional
-    public RoomEnrollmentResponse findById(long id) {
+    public RoomEnrollmentResponse findById(Long id) {
 
         RoomEnrollment roomEnrollment = roomEnrollmentRepository.findById(id)
                 .orElseThrow(RoomUserMismatchException::new);
 
+        return new RoomEnrollmentResponse(roomEnrollment);
+    }
+
+    @Override
+    public RoomEnrollmentResponse findByRoomAndUser(Long userId, Long roomId) {
+        RoomEnrollment roomEnrollment = roomEnrollmentRepository.findByUserAndRoom(userId, roomId)
+                .orElseThrow(RoomUserMismatchException::new);
         return new RoomEnrollmentResponse(roomEnrollment);
     }
 

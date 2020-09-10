@@ -2,10 +2,12 @@ package com.together.smwu.domain.security.config;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpHeaders;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.Collection;
 import java.util.Optional;
 
 public class CookieUtil {
@@ -16,11 +18,12 @@ public class CookieUtil {
                               Boolean secure, Integer maxAge, String domain) {
         Cookie cookie = new Cookie(name, token);
         cookie.setSecure(secure); //secure == true : works on HTTPS only
-        cookie.setHttpOnly(true); // invisible to Javascript
+//        cookie.setHttpOnly(true); // invisible to Javascript
         cookie.setMaxAge(maxAge); //maxAge == 0 : expire cookie now.
-        cookie.setDomain(domain); // visible to domain only
+//        cookie.setDomain("127.0.0.1"); // visible to domain only
         cookie.setPath("/"); //visible all path
         response.addCookie(cookie);
+        addSameSiteCookieAttribute(response);
     }
 
     /*
@@ -51,5 +54,18 @@ public class CookieUtil {
             }
         }
         return Optional.empty();
+    }
+
+    private static void addSameSiteCookieAttribute(HttpServletResponse response) {
+        Collection<String> headers = response.getHeaders(HttpHeaders.SET_COOKIE);
+        boolean firstHeader = true;
+        for (String header : headers) { // there can be multiple Set-Cookie attributes
+            if (firstHeader) {
+                response.setHeader(HttpHeaders.SET_COOKIE, String.format("%s; %s", header, "SameSite=None"));
+                firstHeader = false;
+                continue;
+            }
+            response.addHeader(HttpHeaders.SET_COOKIE, String.format("%s; %s", header, "SameSite=Strict"));
+        }
     }
 }
