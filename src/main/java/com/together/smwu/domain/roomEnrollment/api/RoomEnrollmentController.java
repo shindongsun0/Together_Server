@@ -68,7 +68,7 @@ public class RoomEnrollmentController {
     @ApiOperation(value = "Room의 모든 User 삭제", notes = "Master User라면 roomId로 모든 User를 삭제한다.")
     @DeleteMapping("/room/{roomId}")
     public ResponseEntity<Void> deleteAllUsers(
-            @ApiParam(value = "roomId", required = true) @PathVariable long roomId,
+            @ApiParam(value = "roomId", required = true) @PathVariable Long roomId,
             @CurrentUser User user) {
         roomEnrollmentService.deleteAllUsers(roomId, user);
         return ResponseEntity.noContent().build();

@@ -14,7 +14,7 @@ public class RoomEnrollmentResponse {
     private Timestamp enrolledAt;
     private Boolean isMaster;
 
-    public RoomEnrollmentResponse(RoomEnrollment entity){
+    public RoomEnrollmentResponse(RoomEnrollment entity) {
         this.roomEnrollmentId = entity.getRoomEnrollmentId();
         this.roomId = entity.getRoom().getId();
         this.userId = entity.getUser().getUserId();
