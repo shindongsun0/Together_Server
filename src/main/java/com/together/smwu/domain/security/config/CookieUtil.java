@@ -18,9 +18,9 @@ public class CookieUtil {
                               Boolean secure, Integer maxAge, String domain) {
         Cookie cookie = new Cookie(name, token);
         cookie.setSecure(secure); //secure == true : works on HTTPS only
-        cookie.setHttpOnly(true); // invisible to Javascript
+//        cookie.setHttpOnly(true); // invisible to Javascript
         cookie.setMaxAge(maxAge); //maxAge == 0 : expire cookie now.
-        cookie.setDomain(domain); // visible to domain only
+//        cookie.setDomain("127.0.0.1"); // visible to domain only
         cookie.setPath("/"); //visible all path
         response.addCookie(cookie);
         addSameSiteCookieAttribute(response);
