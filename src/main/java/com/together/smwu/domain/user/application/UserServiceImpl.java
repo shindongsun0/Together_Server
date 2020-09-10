@@ -1,18 +1,21 @@
 package com.together.smwu.domain.user.application;
 
+import com.together.smwu.domain.security.config.CookieUtil;
+import com.together.smwu.domain.security.config.jwt.JwtTokenProvider;
+import com.together.smwu.domain.user.application.interfaces.UserService;
+import com.together.smwu.domain.user.application.social.KakaoService;
+import com.together.smwu.domain.user.dao.UserRepository;
+import com.together.smwu.domain.user.domain.User;
+import com.together.smwu.domain.user.dto.request.SignInRequest;
+import com.together.smwu.domain.user.dto.request.SignUpRequest;
+import com.together.smwu.domain.user.dto.request.UserRequest;
+import com.together.smwu.domain.user.dto.response.LoginResponse;
+import com.together.smwu.domain.user.dto.response.UserResponse;
+import com.together.smwu.domain.user.dto.social.KakaoProfile;
+import com.together.smwu.domain.user.exception.UserNotFoundException;
 import com.together.smwu.global.advice.exception.CUserExistException;
 import com.together.smwu.global.advice.exception.CUserNotFoundException;
 import com.together.smwu.global.config.S3Uploader;
-import com.together.smwu.domain.user.application.interfaces.UserService;
-import com.together.smwu.domain.security.config.CookieUtil;
-import com.together.smwu.domain.security.config.jwt.JwtTokenProvider;
-import com.together.smwu.domain.user.dto.request.SignInRequest;
-import com.together.smwu.domain.user.dto.request.SignUpRequest;
-import com.together.smwu.domain.user.dto.response.LoginResponse;
-import com.together.smwu.domain.user.dto.social.KakaoProfile;
-import com.together.smwu.domain.user.application.social.KakaoService;
-import com.together.smwu.domain.user.domain.User;
-import com.together.smwu.domain.user.dao.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -20,6 +23,7 @@ import org.springframework.stereotype.Service;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -68,8 +72,22 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User getUser() {
-        return null;
+    public UserResponse findByUserId(Long userId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(UserNotFoundException::new);
+        return UserResponse.from(user);
+    }
+
+    @Override
+    public List<UserResponse> findAllUsers() {
+        List<User> users = userRepository.findAll();
+        return UserResponse.listFrom(users);
+    }
+
+    @Override
+    public void updateUser(UserRequest request, User user) {
+        user.update(request.toUserEntity());
+        userRepository.save(user);
     }
 
     @Override
