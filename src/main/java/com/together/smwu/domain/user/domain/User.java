@@ -24,7 +24,7 @@ public class User implements UserDetails {
     @Id
     @Column(nullable = false, name = "id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long userId;
+    private Long userId;
 
     @Column(name = "social_id", nullable = false, unique = true, length = 50)
     private String socialId;
@@ -53,6 +53,12 @@ public class User implements UserDetails {
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return this.roles.stream().map(SimpleGrantedAuthority::new).collect(Collectors.toList());
+    }
+
+    public void update(User user) {
+        this.password = user.password;
+        this.name = user.name;
+        this.profileImage = user.profileImage;
     }
 
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
