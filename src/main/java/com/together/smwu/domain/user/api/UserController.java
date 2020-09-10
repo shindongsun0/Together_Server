@@ -1,22 +1,24 @@
 package com.together.smwu.domain.user.api;
 
-import com.together.smwu.global.advice.exception.CUserNotFoundException;
-import com.together.smwu.domain.security.security.CurrentUser;
 import com.together.smwu.domain.security.config.jwt.JwtTokenProvider;
+import com.together.smwu.domain.security.security.CurrentUser;
+import com.together.smwu.domain.security.service.ResponseService;
+import com.together.smwu.domain.user.application.interfaces.UserService;
+import com.together.smwu.domain.user.dao.UserRepository;
+import com.together.smwu.domain.user.domain.User;
 import com.together.smwu.domain.user.dto.request.UserRequest;
 import com.together.smwu.domain.user.dto.response.CommonResult;
-import com.together.smwu.domain.user.dto.response.ListResult;
-import com.together.smwu.domain.user.dto.response.SingleResult;
-import com.together.smwu.domain.security.service.ResponseService;
-import com.together.smwu.domain.user.domain.User;
-import com.together.smwu.domain.user.dao.UserRepository;
+import com.together.smwu.domain.user.dto.response.UserResponse;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @PreAuthorize("hasRole('ROLE_USER')")
 @Api(tags = {"2. User"})
@@ -26,36 +28,38 @@ import org.springframework.web.bind.annotation.*;
 public class UserController {
 
     private final UserRepository userRepository;
+    private final UserService userService;
     private final ResponseService responseService; // 결과를 처리할 Service
 
     @Autowired
-    public UserController(UserRepository userRepository, JwtTokenProvider jwtTokenProvider, ResponseService responseService) {
+    public UserController(UserRepository userRepository, JwtTokenProvider jwtTokenProvider, UserService userService, ResponseService responseService) {
         this.userRepository = userRepository;
+        this.userService = userService;
         this.responseService = responseService;
     }
 
     @ApiOperation(value = "회원 리스트 조회", notes = "모든 회원을 조회")
     @GetMapping(value = "/users")
-    public ListResult<User> findAllUser(@CurrentUser User user) {
-        return responseService.getListResult(userRepository.findAll());
+    public ResponseEntity<List<UserResponse>> findAllUser(@CurrentUser User user) {
+        List<UserResponse> userResponse = userService.findAllUsers();
+        return ResponseEntity.ok(userResponse);
     }
 
     @ApiOperation(value = "회원 단건 조회", notes = "userId로 회원을 조회한다")
     @GetMapping(value = "/user")
-    public SingleResult<User> findUserById(@CurrentUser User user) {
-
-        return responseService.getSingleResult(userRepository.findBySocialId(user.getSocialId())
-                .orElseThrow(CUserNotFoundException::new));
+    public ResponseEntity<UserResponse> findUserById(@CurrentUser User user) {
+        UserResponse userResponse = userService.findByUserId(user.getUserId());
+        return ResponseEntity.ok(userResponse);
     }
 
     @ApiOperation(value = "회원 수정", notes = "회원 정보를 수정한다")
     @PutMapping(value = "/user")
-    public SingleResult<User> modify(
+    public ResponseEntity<Void> modify(
             @ApiParam(value = "UserRequest.Modify", required = true)
-            @RequestBody UserRequest.Modify modify,
+            @RequestBody UserRequest request,
             @CurrentUser User user) {
-        user.setName(modify.getName());
-        return responseService.getSingleResult(userRepository.save(user));
+        userService.updateUser(request, user);
+        return ResponseEntity.noContent().build();
     }
 
     @ApiOperation(value = "회원 삭제", notes = "userId로 회원정보를 삭제한다")
