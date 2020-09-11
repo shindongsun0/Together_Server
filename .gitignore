@@ -6,6 +6,10 @@ build/
 !**/src/test/**
 application.yml
 
+aws.yml
+Cookie.http
+generated
+
 ### STS ###
 .apt_generated
 .classpath
@@ -36,3 +40,4 @@ out/
 # Directories #
 /bin/
 .idea/
+/keystore.p12
