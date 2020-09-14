@@ -16,7 +16,7 @@ public class RestTemplateConfiguration {
 
     @Bean
     public RestTemplate localTestTemplate() {
-        return restTemplateBuilder.rootUri("http://localhost:8080")
+        return restTemplateBuilder.rootUri("http://localhost:8000")
                 .additionalInterceptors(new RestTemplateClientHttpRequestInterceptor())
                 .errorHandler(new RestTemplateErrorHandler())
                 .setConnectTimeout(3 * 60 * 1000) //3분
