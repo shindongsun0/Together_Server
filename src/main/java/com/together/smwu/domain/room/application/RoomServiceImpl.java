@@ -12,7 +12,7 @@ import com.together.smwu.domain.roomEnrollment.exception.RoomUserMismatchExcepti
 import com.together.smwu.domain.user.domain.User;
 import org.springframework.stereotype.Service;
 
-import javax.jdo.annotations.Transactional;
+import javax.transaction.Transactional;
 import java.util.List;
 
 @Service
@@ -29,7 +29,8 @@ public class RoomServiceImpl implements RoomService {
     }
 
     public Long create(RoomRequest request, User user) {
-        Room room = request.toRoomEntity();
+        final Room room = request.toRoomEntity();
+        room.addTag(request.getTags());
         enrollRoomWithMasterUser(user, room);
         roomRepository.save(room);
         return room.getId();
@@ -37,8 +38,9 @@ public class RoomServiceImpl implements RoomService {
 
     @Transactional
     public void update(Long roomId, RoomRequest request, User user) {
-        Room room = roomRepository.findById(roomId)
+        final Room room = roomRepository.findById(roomId)
                 .orElseThrow(RoomNotFoundException::new);
+        room.addTag(request.getTags());
         room.update(request.toRoomEntity());
         roomRepository.save(room);
     }
@@ -60,7 +62,7 @@ public class RoomServiceImpl implements RoomService {
 
     @Transactional
     public List<RoomResponse> findAllRooms() {
-        List<Room> rooms = roomRepository.findAll();
+        List<Room> rooms = roomRepository.getAllRooms();
         return RoomResponse.listFrom(rooms);
     }
 
@@ -70,10 +72,15 @@ public class RoomServiceImpl implements RoomService {
                 .orElseThrow(RoomNotFoundException::new);
         RoomEnrollment roomEnrollment = roomEnrollmentRepository.findByUserAndRoom(user.getUserId(), roomId)
                 .orElseThrow(RoomUserMismatchException::new);
-        if(roomEnrollment.getIsMaster()){
+        if (roomEnrollment.getIsMaster()) {
             roomRepository.deleteById(authorizedRoom.getId());
         }
-//        roomEnrollmentService.deleteAllUsers(roomEnrollment.getRoomEnrollmentId());
+    }
+
+    @Transactional
+    public List<RoomResponse> findByTagName(String tagName) {
+        List<Room> rooms = roomRepository.findByTagName(tagName);
+        return RoomResponse.listFrom(rooms);
     }
 
     private void enrollRoomWithMasterUser(User user, Room room) {
