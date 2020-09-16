@@ -41,9 +41,7 @@ public class Room {
     @CreationTimestamp
     @Column(name = "created_time", nullable = false)
     private Timestamp createdTime;
-
-    //    @Embedded
-//    private Tags tags;
+    
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "room", cascade = CascadeType.ALL, orphanRemoval = true)
     private final List<Tag> tags = new ArrayList<>();
 
