@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
-@Api(tags = {"3.Room"})
+@Api(tags = {"5.RoomStatic"})
 @RestController
 public class RoomStaticController {
     private static final Logger logger = LoggerFactory.getLogger(RoomStaticController.class);
