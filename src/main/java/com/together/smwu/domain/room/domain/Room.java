@@ -109,4 +109,10 @@ public class Room {
     public List<Tag> getTags() {
         return tags;
     }
+
+    public List<String> getTagNames(){
+        return tags.stream()
+                .map(Tag::getName)
+                .collect(Collectors.toList());
+    }
 }

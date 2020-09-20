@@ -28,4 +28,16 @@ public class Tag {
         this.room = room;
     }
 
+    public String getName(){
+        return name;
+    }
+
+    public Room getRoom(){
+        return room;
+    }
+
+    public Long getId(){
+        return id;
+    }
+
 }
