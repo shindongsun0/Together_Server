@@ -28,7 +28,7 @@ public class S3Uploader {
     @Value("${cloud.aws.s3.bucket}")
     private String bucket;
 
-    public String upload(MultipartFile multipartFile, String userId) throws IOException {
+    public String upload(MultipartFile multipartFile, Long userId) throws IOException {
         if(multipartFile.isEmpty()){
             return getS3( "static/default_userImage.jpeg");
         }else {
@@ -38,7 +38,7 @@ public class S3Uploader {
         }
     }
 
-    private String upload(File uploadFile, String userId) {
+    private String upload(File uploadFile, Long userId) {
         String fileName = "kakao/" + userId;
         String uploadImageUrl = putS3(uploadFile, fileName);
         removeNewFile(uploadFile);
