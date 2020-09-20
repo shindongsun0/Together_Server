@@ -2,30 +2,34 @@ package com.together.smwu.domain.room.application;
 
 import com.together.smwu.domain.room.dao.RoomRepository;
 import com.together.smwu.domain.room.domain.Room;
+import com.together.smwu.domain.room.dto.RoomDetailInfo;
 import com.together.smwu.domain.room.dto.RoomRequest;
 import com.together.smwu.domain.room.dto.RoomResponse;
 import com.together.smwu.domain.room.exception.RoomNotFoundException;
-import com.together.smwu.domain.roomEnrollment.application.RoomEnrollmentService;
 import com.together.smwu.domain.roomEnrollment.dao.RoomEnrollmentRepository;
 import com.together.smwu.domain.roomEnrollment.domain.RoomEnrollment;
 import com.together.smwu.domain.roomEnrollment.exception.RoomUserMismatchException;
+import com.together.smwu.domain.user.dao.UserRepository;
 import com.together.smwu.domain.user.domain.User;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class RoomServiceImpl implements RoomService {
 
     private final RoomRepository roomRepository;
     private final RoomEnrollmentRepository roomEnrollmentRepository;
-    private final RoomEnrollmentService roomEnrollmentService;
+    private final UserRepository userRepository;
 
-    public RoomServiceImpl(RoomRepository roomRepository, RoomEnrollmentRepository roomEnrollmentRepository, RoomEnrollmentService roomEnrollmentService) {
+    public RoomServiceImpl(RoomRepository roomRepository, RoomEnrollmentRepository roomEnrollmentRepository,
+                           UserRepository userRepository) {
         this.roomRepository = roomRepository;
         this.roomEnrollmentRepository = roomEnrollmentRepository;
-        this.roomEnrollmentService = roomEnrollmentService;
+        this.userRepository = userRepository;
     }
 
     public Long create(RoomRequest request, User user) {
@@ -46,24 +50,39 @@ public class RoomServiceImpl implements RoomService {
     }
 
     @Transactional
-    public List<RoomResponse> findByTitle(String roomTitle) {
+    public List<RoomResponse> findByTitle(String roomTitle, User user) {
         List<Room> rooms = roomRepository.findByTitle(roomTitle);
         if (rooms.isEmpty()) {
             throw new RoomNotFoundException(roomTitle);
         }
-        return RoomResponse.listFrom(rooms);
+        List<RoomDetailInfo> roomDetailInfos = rooms.stream()
+                .map(roomEnrollmentRepository::getMasterUser)
+                .collect(Collectors.toList());
+
+        return RoomResponse.listFrom(roomDetailInfos);
     }
 
     @Transactional
-    public RoomResponse findByRoomId(Long roomId) {
+    public RoomResponse findByRoomId(Long roomId, User user) {
         Room room = findById(roomId);
-        return RoomResponse.from(room);
+        RoomDetailInfo roomDetailInfo = roomEnrollmentRepository.getMasterUser(room);
+        return RoomResponse.from(roomDetailInfo);
     }
 
     @Transactional
     public List<RoomResponse> findAllRooms() {
         List<Room> rooms = roomRepository.getAllRooms();
-        return RoomResponse.listFrom(rooms);
+        List<RoomDetailInfo> roomDetailInfos = getRoomDetailInfos(rooms);
+        return RoomResponse.listFrom(roomDetailInfos);
+    }
+
+    private List<RoomDetailInfo> getRoomDetailInfos(List<Room> rooms) {
+        List<RoomDetailInfo> roomDetailInfos = new java.util.ArrayList<>(Collections.emptyList());
+        for(Room room : rooms){
+                RoomDetailInfo addR = roomEnrollmentRepository.getMasterUser(room);
+            roomDetailInfos.add(addR);
+        }
+        return roomDetailInfos;
     }
 
     @Transactional
@@ -80,7 +99,14 @@ public class RoomServiceImpl implements RoomService {
     @Transactional
     public List<RoomResponse> findByTagName(String tagName) {
         List<Room> rooms = roomRepository.findByTagName(tagName);
-        return RoomResponse.listFrom(rooms);
+        if (rooms.isEmpty()) {
+            throw new RoomNotFoundException(tagName);
+        }
+        List<RoomDetailInfo> roomDetailInfos = rooms.stream()
+                .map(roomEnrollmentRepository::getMasterUser)
+                .collect(Collectors.toList());
+
+        return RoomResponse.listFrom(roomDetailInfos);
     }
 
     private void enrollRoomWithMasterUser(User user, Room room) {

@@ -12,9 +12,9 @@ public interface RoomService {
 
     void update(Long roomId, RoomRequest request, User user);
 
-    List<RoomResponse> findByTitle(String roomTitle);
+    List<RoomResponse> findByTitle(String roomTitle, User user);
 
-    RoomResponse findByRoomId(Long roomId);
+    RoomResponse findByRoomId(Long roomId, User user);
 
     List<RoomResponse> findAllRooms();
 
