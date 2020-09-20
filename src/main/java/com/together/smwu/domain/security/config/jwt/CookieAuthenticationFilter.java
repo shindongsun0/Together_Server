@@ -1,5 +1,7 @@
 package com.together.smwu.domain.security.config.jwt;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.filter.GenericFilterBean;
@@ -17,6 +19,7 @@ public class CookieAuthenticationFilter extends GenericFilterBean {
 
     private static final String JWT_COOKIE_NAME = "X-AUTH-TOKEN";
     private final JwtTokenProvider jwtTokenProvider;
+    private static final Logger logger = LoggerFactory.getLogger(CookieAuthenticationFilter.class);
 
     public CookieAuthenticationFilter(JwtTokenProvider jwtTokenProvider) {
         this.jwtTokenProvider = jwtTokenProvider;
