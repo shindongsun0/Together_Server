@@ -7,4 +7,6 @@ import java.util.List;
 public interface RoomRepositoryCustom {
 
     List<Room> getAllRooms();
+
+    List<Room> findByTagName(String tagName);
 }

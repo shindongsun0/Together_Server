@@ -19,4 +19,6 @@ public interface RoomService {
     List<RoomResponse> findAllRooms();
 
     void deleteRoomById(Long roomId, User user);
+
+    List<RoomResponse> findByTagName(String tagName);
 }
