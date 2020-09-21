@@ -9,6 +9,7 @@ import com.together.smwu.domain.user.domain.User;
 import com.together.smwu.domain.user.dto.request.UserRequest;
 import com.together.smwu.domain.user.dto.response.CommonResult;
 import com.together.smwu.domain.user.dto.response.UserResponse;
+import com.together.smwu.global.config.S3Uploader;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
@@ -17,7 +18,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 
 @PreAuthorize("hasRole('ROLE_USER')")
@@ -30,12 +33,14 @@ public class UserController {
     private final UserRepository userRepository;
     private final UserService userService;
     private final ResponseService responseService; // 결과를 처리할 Service
+    private final S3Uploader s3Uploader;
 
     @Autowired
-    public UserController(UserRepository userRepository, JwtTokenProvider jwtTokenProvider, UserService userService, ResponseService responseService) {
+    public UserController(UserRepository userRepository, JwtTokenProvider jwtTokenProvider, UserService userService, ResponseService responseService, S3Uploader s3Uploader) {
         this.userRepository = userRepository;
         this.userService = userService;
         this.responseService = responseService;
+        this.s3Uploader = s3Uploader;
     }
 
     @ApiOperation(value = "회원 리스트 조회", notes = "모든 회원을 조회")
@@ -54,11 +59,21 @@ public class UserController {
 
     @ApiOperation(value = "회원 수정", notes = "회원 정보를 수정한다")
     @PutMapping(value = "/user")
-    public ResponseEntity<Void> modify(
+    public ResponseEntity<Void> update(
             @ApiParam(value = "UserRequest.Modify", required = true)
             @RequestBody UserRequest request,
             @CurrentUser User user) {
         userService.updateUser(request, user);
+        return ResponseEntity.noContent().build();
+    }
+
+    @ApiOperation(value = "회원 이미지 수정", notes = "회원 이미지를 파일로 받아 수정한다.")
+    @PutMapping(value = "/image/user")
+    public ResponseEntity<Void> updateImage(
+            @ApiParam(value = "회원 ProfileImage", required = true)
+            @RequestParam("data") MultipartFile multipartFile,
+            @CurrentUser User user) throws IOException {
+        userService.updateProfileImage(multipartFile, user);
         return ResponseEntity.noContent().build();
     }
 
