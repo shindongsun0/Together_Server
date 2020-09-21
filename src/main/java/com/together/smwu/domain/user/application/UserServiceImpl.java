@@ -19,9 +19,11 @@ import com.together.smwu.global.config.S3Uploader;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -119,5 +121,12 @@ public class UserServiceImpl implements UserService {
         }
 
         userRepository.save(inUser);
+    }
+
+    @Override
+    public void updateProfileImage(MultipartFile multipartFile, User user) throws IOException {
+        String url = s3Uploader.upload(multipartFile, user.getUserId());
+        user.setProfileImage(url);
+        userRepository.save(user);
     }
 }
