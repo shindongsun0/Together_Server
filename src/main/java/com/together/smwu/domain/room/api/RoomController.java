@@ -54,7 +54,7 @@ public class RoomController {
     public ResponseEntity<List<RoomResponse>> findByTitle(
             @ApiParam(value = "title", required = true) @RequestParam String title,
             @CurrentUser User user) {
-        List<RoomResponse> responses = roomService.findByTitle(title);
+        List<RoomResponse> responses = roomService.findByTitle(title, user);
         return ResponseEntity.ok(responses);
     }
 
@@ -63,7 +63,7 @@ public class RoomController {
     public ResponseEntity<RoomResponse> findByTitle(
             @ApiParam(value = "title", required = true) @PathVariable Long roomId,
             @CurrentUser User user) {
-        RoomResponse roomResponse = roomService.findByRoomId(roomId);
+        RoomResponse roomResponse = roomService.findByRoomId(roomId, user);
         return ResponseEntity.ok(roomResponse);
     }
 

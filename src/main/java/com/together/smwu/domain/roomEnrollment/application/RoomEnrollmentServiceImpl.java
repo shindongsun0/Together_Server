@@ -15,7 +15,7 @@ import com.together.smwu.domain.user.domain.User;
 import com.together.smwu.domain.user.exception.UserNotFoundException;
 import org.springframework.stereotype.Service;
 
-import javax.jdo.annotations.Transactional;
+import javax.transaction.Transactional;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -61,13 +61,16 @@ public class RoomEnrollmentServiceImpl implements RoomEnrollmentService {
         Room room = roomRepository.findById(request.getRoomId())
                 .orElseThrow(RoomNotFoundException::new);
 
-        boolean hasCredential = room.getCredential().isEmpty();
-        if (hasCredential) {
-            if (!request.getCredential().equals(room.getCredential())) {
+        if (room.getCredential().isEmpty()) {
+            if (!isSavedCredential(request, room)) {
                 throw new RoomNotAuthorizedException();
             }
         }
 
+    }
+
+    private boolean isSavedCredential(RoomEnrollmentRequest request, Room room) {
+        return request.getCredential().equals(room.getCredential());
     }
 
     private RoomEnrollment convertToRoomEnrollment(RoomEnrollmentRequest request, User user) {
