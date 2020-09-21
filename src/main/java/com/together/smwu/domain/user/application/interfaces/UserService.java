@@ -7,9 +7,11 @@ import com.together.smwu.domain.user.dto.request.UserRequest;
 import com.together.smwu.domain.user.dto.response.LoginResponse;
 import com.together.smwu.domain.user.dto.response.UserResponse;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import java.util.List;
 
 public interface UserService {
@@ -27,4 +29,6 @@ public interface UserService {
     void logout(HttpServletRequest request, HttpServletResponse response);
 
     void signUp(SignUpRequest signUpRequest);
+
+    void updateProfileImage(MultipartFile multipartFile, User user) throws IOException;
 }
