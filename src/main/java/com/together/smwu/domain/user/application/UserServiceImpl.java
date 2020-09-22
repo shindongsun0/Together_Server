@@ -125,7 +125,8 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void updateProfileImage(MultipartFile multipartFile, User user) throws IOException {
-        String url = s3Uploader.upload(multipartFile, user.getUserId());
+        String fileName = "static/" + user.getUserId();
+        String url = s3Uploader.upload(multipartFile, fileName);
         user.setProfileImage(url);
         userRepository.save(user);
     }
