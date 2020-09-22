@@ -1,7 +1,9 @@
 package com.together.smwu.domain.roomEnrollment.application;
 
+import com.together.smwu.domain.roomEnrollment.dto.RoomDetailResponse;
 import com.together.smwu.domain.roomEnrollment.dto.RoomEnrollmentRequest;
 import com.together.smwu.domain.roomEnrollment.dto.RoomEnrollmentResponse;
+import com.together.smwu.domain.roomEnrollment.dto.UserDetailResponse;
 import com.together.smwu.domain.user.domain.User;
 
 import java.util.List;
@@ -14,9 +16,9 @@ public interface RoomEnrollmentService {
 
     void deleteUserFromRoom(Long roomId, User user);
 
-    List<RoomEnrollmentResponse> findAllByRoomId(Long roomId);
+    List<UserDetailResponse> findAllByRoomId(Long roomId);
 
-    List<RoomEnrollmentResponse> findAllByUser(Long userId);
+    List<RoomDetailResponse> findAllByUser(Long userId);
 
     RoomEnrollmentResponse findById(Long id);
 
