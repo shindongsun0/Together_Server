@@ -80,7 +80,7 @@ public class UserController {
     @ApiOperation(value = "회원 삭제", notes = "userId로 회원정보를 삭제한다")
     @DeleteMapping(value = "/user/{userId}")
     public CommonResult delete(
-            @ApiParam(value = "회원번호", required = true) @PathVariable long userId,
+            @ApiParam(value = "회원번호", required = true) @PathVariable Long userId,
             @CurrentUser User user) {
         userRepository.deleteById(userId);
         // 성공 결과 정보만 필요한경우 getSuccessResult()를 이용하여 결과를 출력한다.
