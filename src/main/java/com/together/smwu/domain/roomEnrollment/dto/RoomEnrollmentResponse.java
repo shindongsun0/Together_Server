@@ -9,11 +9,11 @@ import java.sql.Timestamp;
 @Getter
 public class RoomEnrollmentResponse {
 
-    private Long roomEnrollmentId;
-    private RoomInfo room;
-    private Long userId;
-    private Timestamp enrolledAt;
-    private Boolean isMaster;
+    private final Long roomEnrollmentId;
+    private final RoomInfo room;
+    private final Long userId;
+    private final Timestamp enrolledAt;
+    private final Boolean isMaster;
 
     public RoomEnrollmentResponse(RoomEnrollment entity) {
         this.roomEnrollmentId = entity.getRoomEnrollmentId();
