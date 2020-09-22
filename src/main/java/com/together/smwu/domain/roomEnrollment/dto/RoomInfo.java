@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.sql.Timestamp;
+import java.util.List;
 
 @Getter
 @AllArgsConstructor
@@ -16,6 +17,7 @@ public class RoomInfo {
     private String content;
     private String imageUrl;
     private Timestamp createdTime;
+    private List<String> tags;
 
     public RoomInfo(Room room) {
         this.id = room.getId();
@@ -23,5 +25,6 @@ public class RoomInfo {
         this.content = room.getContent();
         this.imageUrl = room.getImageUrl();
         this.createdTime = room.getCreatedTime();
+        this.tags = room.getTagNames();
     }
 }

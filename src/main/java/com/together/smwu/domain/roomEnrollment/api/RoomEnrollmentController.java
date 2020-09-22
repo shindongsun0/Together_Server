@@ -1,8 +1,10 @@
 package com.together.smwu.domain.roomEnrollment.api;
 
 import com.together.smwu.domain.roomEnrollment.application.RoomEnrollmentService;
+import com.together.smwu.domain.roomEnrollment.dto.RoomDetailResponse;
 import com.together.smwu.domain.roomEnrollment.dto.RoomEnrollmentRequest;
 import com.together.smwu.domain.roomEnrollment.dto.RoomEnrollmentResponse;
+import com.together.smwu.domain.roomEnrollment.dto.UserDetailResponse;
 import com.together.smwu.domain.security.security.CurrentUser;
 import com.together.smwu.domain.user.domain.User;
 import io.swagger.annotations.Api;
@@ -41,19 +43,19 @@ public class RoomEnrollmentController {
 
     @ApiOperation(value = "Room의 모든 user 조회", notes = "roomId로 모든 User를 조회한다.")
     @GetMapping("/all/user/{roomId}")
-    public ResponseEntity<List<RoomEnrollmentResponse>> findAllUsers(
+    public ResponseEntity<List<UserDetailResponse>> findAllUsers(
             @ApiParam(value = "roomId", required = true) @PathVariable long roomId,
             @CurrentUser User user) {
-        List<RoomEnrollmentResponse> responses = roomEnrollmentService.findAllByRoomId(roomId);
+        List<UserDetailResponse> responses = roomEnrollmentService.findAllByRoomId(roomId);
         return ResponseEntity.ok(responses);
     }
 
     @ApiOperation(value = "User가 속한 모든 room 조회", notes = "userId로 등록한 모든 room을 조회한다.")
     @GetMapping("/all/room/{userId}")
-    public ResponseEntity<List<RoomEnrollmentResponse>> findAllRooms(
+    public ResponseEntity<List<RoomDetailResponse>> findAllRooms(
             @ApiParam(value = "userId", required = true) @PathVariable long userId,
             @CurrentUser User user) {
-        List<RoomEnrollmentResponse> responses = roomEnrollmentService.findAllByUser(userId);
+        List<RoomDetailResponse> responses = roomEnrollmentService.findAllByUser(userId);
         return ResponseEntity.ok(responses);
     }
 
