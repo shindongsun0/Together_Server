@@ -9,7 +9,7 @@ import com.together.smwu.domain.user.domain.User;
 import com.together.smwu.domain.user.dto.request.UserRequest;
 import com.together.smwu.domain.user.dto.response.CommonResult;
 import com.together.smwu.domain.user.dto.response.UserResponse;
-import com.together.smwu.global.config.S3Uploader;
+import com.together.smwu.global.aws.S3Uploader;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;

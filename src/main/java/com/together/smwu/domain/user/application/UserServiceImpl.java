@@ -15,7 +15,7 @@ import com.together.smwu.domain.user.dto.social.KakaoProfile;
 import com.together.smwu.domain.user.exception.UserNotFoundException;
 import com.together.smwu.global.advice.exception.CUserExistException;
 import com.together.smwu.global.advice.exception.CUserNotFoundException;
-import com.together.smwu.global.config.S3Uploader;
+import com.together.smwu.global.aws.S3Uploader;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
