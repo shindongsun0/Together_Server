@@ -1,4 +1,4 @@
-package com.together.smwu.global.config;
+package com.together.smwu.global.aws;
 
 import com.amazonaws.services.s3.AmazonS3Client;
 import com.amazonaws.services.s3.model.CannedAccessControlList;
@@ -14,7 +14,6 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.util.Objects;
 import java.util.Optional;
 
 @RequiredArgsConstructor
@@ -28,18 +27,18 @@ public class S3Uploader {
     @Value("${cloud.aws.s3.bucket}")
     private String bucket;
 
-    public String upload(MultipartFile multipartFile, String userId) throws IOException {
-        if(multipartFile.isEmpty()){
-            return getS3( "static/default_userImage.jpeg");
-        }else {
+    public String upload(MultipartFile multipartFile, Long userId) throws IOException {
+        if (multipartFile.isEmpty()) {
+            return getS3("static/default_userImage.jpeg");
+        } else {
             File uploadFile = convert(multipartFile)
                     .orElseThrow(() -> new IllegalArgumentException("MultipartFile -> File로 전환이 실패했습니다."));
             return upload(uploadFile, userId);
         }
     }
 
-    private String upload(File uploadFile, String userId) {
-        String fileName = "kakao/" + userId;
+    private String upload(File uploadFile, Long userId) {
+        String fileName = "static/" + userId;
         String uploadImageUrl = putS3(uploadFile, fileName);
         removeNewFile(uploadFile);
         return uploadImageUrl;
@@ -54,16 +53,17 @@ public class S3Uploader {
     }
 
     private String putS3(File uploadFile, String fileName) {
+        logger.info(bucket+fileName);
         amazonS3Client.putObject(new PutObjectRequest(bucket, fileName, uploadFile).withCannedAcl(CannedAccessControlList.PublicRead));
         return amazonS3Client.getUrl(bucket, fileName).toString();
     }
 
-    public String getS3(String fileName){
-        return String.valueOf(amazonS3Client.getObject(new GetObjectRequest(bucket, fileName)));
+    public String getS3(String fileName) {
+        return String.valueOf(amazonS3Client.getObject(new GetObjectRequest(bucket, "static/" + fileName)));
     }
 
     private Optional<File> convert(MultipartFile file) throws IOException {
-        File convertFile = new File(Objects.requireNonNull(file.getOriginalFilename()));
+        File convertFile = new File(file.getOriginalFilename());
         if (convertFile.createNewFile()) {
             try (FileOutputStream fos = new FileOutputStream(convertFile)) {
                 fos.write(file.getBytes());

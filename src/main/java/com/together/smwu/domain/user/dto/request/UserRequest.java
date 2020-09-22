@@ -9,21 +9,27 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = AccessLevel.PACKAGE)
 public class UserRequest {
 
-    private String password;
+    private Long userId;
+    private String socialId;
     private String name;
+    private String provider;
     private String profileImage;
 
-    private UserRequest(String password, String name,
-                        String profileImage){
-        this.password = password;
+    private UserRequest(Long userId, String socialId, String name,
+                        String provider, String profileImage){
+        this.userId = userId;
+        this.socialId = socialId;
         this.name = name;
+        this.provider = provider;
         this.profileImage = profileImage;
     }
 
     public User toUserEntity(){
         return User.builder()
-                .password(password)
+                .userId(userId)
+                .socialId(socialId)
                 .name(name)
+                .provider(provider)
                 .profileImage(profileImage)
                 .build();
     }
