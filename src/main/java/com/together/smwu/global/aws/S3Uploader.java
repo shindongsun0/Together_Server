@@ -27,18 +27,17 @@ public class S3Uploader {
     @Value("${cloud.aws.s3.bucket}")
     private String bucket;
 
-    public String upload(MultipartFile multipartFile, Long userId) throws IOException {
+    public String upload(MultipartFile multipartFile, String fileName) throws IOException {
         if (multipartFile.isEmpty()) {
             return getS3("static/default_userImage.jpeg");
         } else {
             File uploadFile = convert(multipartFile)
                     .orElseThrow(() -> new IllegalArgumentException("MultipartFile -> File로 전환이 실패했습니다."));
-            return upload(uploadFile, userId);
+            return upload(uploadFile, fileName);
         }
     }
 
-    private String upload(File uploadFile, Long userId) {
-        String fileName = "static/" + userId;
+    private String upload(File uploadFile, String fileName) {
         String uploadImageUrl = putS3(uploadFile, fileName);
         removeNewFile(uploadFile);
         return uploadImageUrl;
