@@ -10,4 +10,12 @@ public class SignUpRequest {
     private String provider;
     private String name;
     private String profileImage;
+
+    private SignUpRequest(String accessToken, String provider, String name,
+                          String profileImage) {
+        this.accessToken = accessToken;
+        this.provider = provider;
+        this.name = name;
+        this.profileImage = profileImage;
+    }
 }

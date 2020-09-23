@@ -40,3 +40,5 @@ out/
 # Directories #
 /bin/
 .idea/
+/keystore.p12
+/src/main/generated/
