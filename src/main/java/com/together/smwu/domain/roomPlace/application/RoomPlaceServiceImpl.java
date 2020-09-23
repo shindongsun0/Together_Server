@@ -8,6 +8,8 @@ import com.together.smwu.domain.room.domain.Room;
 import com.together.smwu.domain.room.exception.RoomNotFoundException;
 import com.together.smwu.domain.roomPlace.dao.RoomPlaceRepository;
 import com.together.smwu.domain.roomPlace.domain.RoomPlace;
+import com.together.smwu.domain.roomPlace.dto.PlaceDetailResponse;
+import com.together.smwu.domain.roomPlace.dto.RoomListResponse;
 import com.together.smwu.domain.roomPlace.dto.RoomPlaceRequest;
 import com.together.smwu.domain.roomPlace.dto.RoomPlaceResponse;
 import com.together.smwu.domain.roomPlace.exception.RoomPlaceNotFoundException;
@@ -47,24 +49,21 @@ public class RoomPlaceServiceImpl implements RoomPlaceService {
     }
 
     @Transactional
-    public List<RoomPlaceResponse> findAllByPlaceId(Long placeId) {
+    public RoomListResponse findAllByPlaceId(Long placeId) {
         Place place = placeRepository.findById(placeId)
                 .orElseThrow(PlaceNotFoundException::new);
-
-        return roomPlaceRepository.findAllByPlace(place)
-                .stream()
-                .map(RoomPlaceResponse::new)
-                .collect(Collectors.toList());
+        List<RoomPlace> roomPlaces = roomPlaceRepository.findAllByPlace(place);
+        return RoomListResponse.from(roomPlaces);
     }
 
     @Transactional
-    public List<RoomPlaceResponse> findAllByRoomId(Long roomId) {
+    public List<PlaceDetailResponse> findAllByRoomId(Long roomId) {
         Room room = roomRepository.findById(roomId)
                 .orElseThrow(RoomNotFoundException::new);
 
         return roomPlaceRepository.findAllByRoom(room)
                 .stream()
-                .map(RoomPlaceResponse::new)
+                .map(PlaceDetailResponse::new)
                 .collect(Collectors.toList());
     }
 
@@ -86,7 +85,7 @@ public class RoomPlaceServiceImpl implements RoomPlaceService {
         deleteRoomPlaceById(roomPlaces);
     }
 
-    @Override
+    @Transactional
     public RoomPlaceResponse findByRoomPlaceId(Long roomPlaceId) {
         RoomPlace roomPlace = roomPlaceRepository.findById(roomPlaceId)
                 .orElseThrow(RoomPlaceNotFoundException::new);
