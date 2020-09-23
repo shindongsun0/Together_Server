@@ -21,4 +21,12 @@ public class PlaceRepositoryImpl implements PlaceRepositoryCustom {
                 .fetch();
     }
 
+    @Override
+    public List<Place> findPlaceNameContains(String name) {
+        return queryFactory
+                .selectFrom(place)
+                .where(place.name.contains(name))
+                .fetch();
+    }
+
 }
