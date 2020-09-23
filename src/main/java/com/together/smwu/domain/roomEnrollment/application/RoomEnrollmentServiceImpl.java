@@ -136,12 +136,9 @@ public class RoomEnrollmentServiceImpl implements RoomEnrollmentService {
      */
     @Transactional
     public List<UserDetailResponse> findAllByRoomId(Long roomId) {
-
-        //room
         Room room = roomRepository.findById(roomId)
                 .orElseThrow(RoomNotFoundException::new);
 
-        //find all roomEnrollments by room
         return roomEnrollmentRepository.findAllByRoom(room)
                 .stream()
                 .map(RoomEnrollment::getUser)
@@ -157,12 +154,9 @@ public class RoomEnrollmentServiceImpl implements RoomEnrollmentService {
      */
     @Transactional
     public List<RoomDetailResponse> findAllByUser(Long userId) {
-
-        //user
         User user = userRepository.findById(userId)
                 .orElseThrow(UserNotFoundException::new);
 
-        //find all roomEnrollments by user
         return roomEnrollmentRepository.findRoomDetailInfosByUser(user)
                 .stream()
                 .map(RoomDetailResponse::new)
@@ -171,7 +165,6 @@ public class RoomEnrollmentServiceImpl implements RoomEnrollmentService {
 
     @Transactional
     public RoomEnrollmentResponse findById(Long id) {
-
         RoomEnrollment roomEnrollment = roomEnrollmentRepository.findById(id)
                 .orElseThrow(RoomUserMismatchException::new);
 
