@@ -1,14 +1,13 @@
 package com.together.smwu.domain.roomPlace.dto;
 
 import com.together.smwu.domain.place.domain.Place;
-import com.together.smwu.domain.room.domain.Room;
 import com.together.smwu.domain.roomPlace.domain.RoomPlace;
 
 import java.sql.Timestamp;
 
 public class RoomPlaceResponse {
     private Long roomPlaceId;
-    private Room room;
+    private Long roomId;
     private Place place;
     private Timestamp postTime;
 
@@ -17,7 +16,7 @@ public class RoomPlaceResponse {
 
     public RoomPlaceResponse(RoomPlace entity) {
         this.roomPlaceId = entity.getId();
-        this.room = entity.getRoom();
+        this.roomId = entity.getRoom().getId();
         this.place = entity.getPlace();
         this.postTime = entity.getPostTime();
     }
@@ -26,8 +25,8 @@ public class RoomPlaceResponse {
         return this.roomPlaceId;
     }
 
-    public Room getRoom() {
-        return this.room;
+    public Long getRoomId() {
+        return this.roomId;
     }
 
     public Place getPlace() {
