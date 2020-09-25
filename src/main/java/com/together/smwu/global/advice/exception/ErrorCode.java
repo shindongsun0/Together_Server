@@ -14,12 +14,15 @@ public enum ErrorCode {
     HANDLE_ACCESS_DENIED(403, "C006", "Access is Denied"),
 
     // User
-    USER_ALREADY_EXISTS(400, "U001", "User was already registered"),
+    USER_ALREADY_EXISTS(400, "U001", "User is already registered"),
     USER_LOGGED_OUT(400, "U002", "Users' JWT Token Expired"),
 
     // Room
-    ROOM_ALREADY_EXISTS(400, "GR001", "Room was already made"),
-    ROOM_NOT_AUTHORIZED(403, "GR002", "Room Access is Denied");
+    ROOM_ALREADY_EXISTS(400, "GR001", "Room is already registered."),
+    ROOM_NOT_AUTHORIZED(403, "GR002", "Room Access is Denied"),
+
+    // Place
+    PLACE_ALREADY_EXISTS(400, "P001", "Place is already stored.");
 
     private final String code;
     private final String message;

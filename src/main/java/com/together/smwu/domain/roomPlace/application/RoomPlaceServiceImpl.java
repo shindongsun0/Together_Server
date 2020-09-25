@@ -68,19 +68,15 @@ public class RoomPlaceServiceImpl implements RoomPlaceService {
     }
 
     @Transactional
+    public void deletePlaceFromRoom(Long roomPlaceId) {
+        roomPlaceRepository.deleteById(roomPlaceId);
+    }
+
+    @Transactional
     public void deleteAllPlacesByRoomId(Long roomId) {
         Room room = roomRepository.findById(roomId)
                 .orElseThrow(RoomNotFoundException::new);
         List<RoomPlace> roomPlaces = roomPlaceRepository.findAllByRoom(room);
-
-        deleteRoomPlaceById(roomPlaces);
-    }
-
-    @Transactional
-    public void deleteAllRoomsByPlaceId(Long placeId) {
-        Place place = placeRepository.findById(placeId)
-                .orElseThrow(PlaceNotFoundException::new);
-        List<RoomPlace> roomPlaces = roomPlaceRepository.findAllByPlace(place);
 
         deleteRoomPlaceById(roomPlaces);
     }

@@ -44,7 +44,7 @@ public class Place {
     
     @Builder
     public Place(String name, Integer category, Long mapX, Long mapY,
-                 String content, String location, String mainImageUrl) {
+                 String content, String location, String mainImageUrl, Long id) {
         this.name = name;
         this.category = category;
         this.mapX = mapX;
@@ -52,6 +52,7 @@ public class Place {
         this.content = content;
         this.location = location;
         this.mainImageUrl = mainImageUrl;
+        this.id = id;
     }
 
     public void update(Place place) {
@@ -62,6 +63,7 @@ public class Place {
         this.content = place.content;
         this.location = place.location;
         this.mainImageUrl = place.mainImageUrl;
+        this.id = place.getId();
     }
 
     public void updateMainImageUrl(String mainImageUrl) {

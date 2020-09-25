@@ -67,21 +67,21 @@ public class RoomPlaceController {
         return ResponseEntity.ok(response);
     }
 
-    @ApiOperation(value = "Place가 속한 모든 Room삭제")
-    @DeleteMapping("/room/{roomId}")
+    @ApiOperation(value = "Room에서 Place 삭제")
+    @DeleteMapping("/{roomPlaceId}")
+    public ResponseEntity<Void> deletePlaceFromRoom(
+            @ApiParam(value = "roomPlaceId", required = true) @PathVariable Long roomPlaceId,
+            @CurrentUser User user) {
+        roomPlaceService.deletePlaceFromRoom(roomPlaceId);
+        return ResponseEntity.noContent().build();
+    }
+
+    @ApiOperation(value = "Room에 속한 모든 Place삭제")
+    @DeleteMapping("/{roomId}")
     public ResponseEntity<Void> deleteAllPlaces(
             @ApiParam(value = "roomId", required = true) @PathVariable Long roomId,
             @CurrentUser User user) {
         roomPlaceService.deleteAllPlacesByRoomId(roomId);
-        return ResponseEntity.noContent().build();
-    }
-
-    @ApiOperation(value = "Room이 속한 모든 Place삭제")
-    @DeleteMapping("/place/{placeId}")
-    public ResponseEntity<Void> deleteAllRooms(
-            @ApiParam(value = "placeId", required = true) @PathVariable Long placeId,
-            @CurrentUser User user) {
-        roomPlaceService.deleteAllRoomsByPlaceId(placeId);
         return ResponseEntity.noContent().build();
     }
 }

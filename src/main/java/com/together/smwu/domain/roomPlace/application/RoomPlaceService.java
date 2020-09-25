@@ -16,9 +16,9 @@ public interface RoomPlaceService {
 
     List<PlaceDetailResponse> findAllByRoomId(Long roomId);
 
-    void deleteAllPlacesByRoomId(Long roomId);
+    void deletePlaceFromRoom(Long roomPlaceId);
 
-    void deleteAllRoomsByPlaceId(Long placeId);
+    void deleteAllPlacesByRoomId(Long roomId);
 
     RoomPlaceResponse findByRoomPlaceId(Long roomPlaceId);
 }

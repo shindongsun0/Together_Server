@@ -5,6 +5,7 @@ import com.together.smwu.domain.place.domain.Place;
 import com.together.smwu.domain.place.dto.PlaceCreateRequest;
 import com.together.smwu.domain.place.dto.PlaceResponse;
 import com.together.smwu.domain.place.dto.PlaceUpdateRequest;
+import com.together.smwu.domain.place.exception.PlaceAlreadyEnrolledException;
 import com.together.smwu.domain.place.exception.PlaceNotFoundException;
 import com.together.smwu.domain.placeImage.dao.PlaceImageRepository;
 import com.together.smwu.domain.placeImage.domain.PlaceImage;
@@ -40,10 +41,18 @@ public class PlaceServiceImpl implements PlaceService {
     @Transactional
     public Long create(PlaceCreateRequest request) {
         Place place = request.toPlaceEntity();
-        placeRepository.save(place);
-        savePlaceMainImage(place);
-        enrollPlaceInRoom(request, place);
-        return place.getId();
+        if (isNotEnrolledPlace(place)) {
+            placeRepository.save(place);
+            savePlaceMainImage(place);
+            enrollPlaceInRoom(request, place);
+            return place.getId();
+        }
+        throw new PlaceAlreadyEnrolledException();
+    }
+
+    private boolean isNotEnrolledPlace(Place place) {
+        return !placeRepository.findByNameAndMapX(place.getName(), place.getMapX())
+                .isPresent();
     }
 
     private void enrollPlaceInRoom(PlaceCreateRequest request, Place place) {
@@ -65,7 +74,8 @@ public class PlaceServiceImpl implements PlaceService {
 
     @Transactional
     public void updatePlace(PlaceUpdateRequest request) {
-        Place place = request.toPlaceEntity();
+        final Place place = getPlaceByPlaceId(request.getPlaceId());
+        place.update(request.toPlaceEntity());
         placeRepository.save(place);
     }
 
