@@ -23,7 +23,7 @@ public class Place {
     String name;
 
     @Column(name = "category")
-    Integer category;
+    String category;
 
     @Column(name = "map_x")
     Long mapX;
@@ -43,8 +43,8 @@ public class Place {
     Timestamp postTime;
     
     @Builder
-    public Place(String name, Integer category, Long mapX, Long mapY,
-                 String content, String location, String mainImageUrl) {
+    public Place(String name, String category, Long mapX, Long mapY,
+                 String content, String location, String mainImageUrl, Long id) {
         this.name = name;
         this.category = category;
         this.mapX = mapX;
@@ -76,7 +76,7 @@ public class Place {
         return name;
     }
 
-    public Integer getCategory() {
+    public String getCategory() {
         return category;
     }
 

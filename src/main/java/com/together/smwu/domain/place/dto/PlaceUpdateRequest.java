@@ -7,7 +7,7 @@ import javax.validation.constraints.NotNull;
 public class PlaceUpdateRequest {
     @NotNull
     private String name;
-    private Integer category;
+    private String category;
     private Long mapX;
     private Long mapY;
     private String content;
@@ -16,7 +16,8 @@ public class PlaceUpdateRequest {
     public PlaceUpdateRequest() {
     }
 
-    public PlaceUpdateRequest(String name, Integer category, Long mapX, Long mapY, String content, String location) {
+    public PlaceUpdateRequest(String name, String category, Long mapX, Long mapY, String content, String location,
+                              Long placeId) {
         this.name = name;
         this.category = category;
         this.mapX = mapX;
@@ -34,5 +35,33 @@ public class PlaceUpdateRequest {
                 .content(content)
                 .location(location)
                 .build();
+    }
+
+    public @NotNull String getName() {
+        return this.name;
+    }
+
+    public String getCategory() {
+        return this.category;
+    }
+
+    public Long getMapX() {
+        return this.mapX;
+    }
+
+    public Long getMapY() {
+        return this.mapY;
+    }
+
+    public String getContent() {
+        return this.content;
+    }
+
+    public String getLocation() {
+        return this.location;
+    }
+
+    public Long getPlaceId() {
+        return this.placeId;
     }
 }
