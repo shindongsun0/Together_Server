@@ -5,8 +5,10 @@ import com.together.smwu.domain.room.domain.Room;
 import com.together.smwu.domain.room.exception.RoomNotFoundException;
 import com.together.smwu.domain.roomEnrollment.dao.RoomEnrollmentRepository;
 import com.together.smwu.domain.roomEnrollment.domain.RoomEnrollment;
+import com.together.smwu.domain.roomEnrollment.dto.RoomDetailResponse;
 import com.together.smwu.domain.roomEnrollment.dto.RoomEnrollmentRequest;
 import com.together.smwu.domain.roomEnrollment.dto.RoomEnrollmentResponse;
+import com.together.smwu.domain.roomEnrollment.dto.UserDetailResponse;
 import com.together.smwu.domain.roomEnrollment.exception.RoomAlreadyEnrollException;
 import com.together.smwu.domain.roomEnrollment.exception.RoomNotAuthorizedException;
 import com.together.smwu.domain.roomEnrollment.exception.RoomUserMismatchException;
@@ -133,16 +135,14 @@ public class RoomEnrollmentServiceImpl implements RoomEnrollmentService {
      * @return 해당 그룹의 전체 enroll 정보를 가져온다.
      */
     @Transactional
-    public List<RoomEnrollmentResponse> findAllByRoomId(Long roomId) {
-
-        //room
+    public List<UserDetailResponse> findAllByRoomId(Long roomId) {
         Room room = roomRepository.findById(roomId)
                 .orElseThrow(RoomNotFoundException::new);
 
-        //find all roomEnrollments by room
         return roomEnrollmentRepository.findAllByRoom(room)
                 .stream()
-                .map(RoomEnrollmentResponse::new)
+                .map(RoomEnrollment::getUser)
+                .map(UserDetailResponse::new)
                 .collect(Collectors.toList());
     }
 
@@ -153,22 +153,18 @@ public class RoomEnrollmentServiceImpl implements RoomEnrollmentService {
      * @return
      */
     @Transactional
-    public List<RoomEnrollmentResponse> findAllByUser(Long userId) {
-
-        //user
+    public List<RoomDetailResponse> findAllByUser(Long userId) {
         User user = userRepository.findById(userId)
                 .orElseThrow(UserNotFoundException::new);
 
-        //find all roomEnrollments by user
-        return roomEnrollmentRepository.findAllByUser(user)
+        return roomEnrollmentRepository.findRoomDetailInfosByUser(user)
                 .stream()
-                .map(RoomEnrollmentResponse::new)
+                .map(RoomDetailResponse::new)
                 .collect(Collectors.toList());
     }
 
     @Transactional
     public RoomEnrollmentResponse findById(Long id) {
-
         RoomEnrollment roomEnrollment = roomEnrollmentRepository.findById(id)
                 .orElseThrow(RoomUserMismatchException::new);
 

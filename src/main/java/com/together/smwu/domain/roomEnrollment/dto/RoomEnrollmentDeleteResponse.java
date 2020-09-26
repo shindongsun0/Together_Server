@@ -7,6 +7,6 @@ import lombok.Getter;
 @Builder
 public class RoomEnrollmentDeleteResponse {
 
-    private Long roomId;
-    private Long userId;
+    private final Long roomId;
+    private final Long userId;
 }
