@@ -26,7 +26,7 @@ public class RoomStaticController {
     }
 
     @ApiOperation(value = "모든 Room 조회", notes = "모든 Room을 조회한다.")
-    @GetMapping("/api/room/all")
+    @GetMapping("/api/all/room")
     public ResponseEntity<List<RoomResponse>> findAllRooms()  {
         List<RoomResponse> responses = roomService.findAllRooms();
         return ResponseEntity.ok(responses);

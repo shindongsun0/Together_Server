@@ -1,6 +1,8 @@
 package com.together.smwu.domain.roomPlace.api;
 
 import com.together.smwu.domain.roomPlace.application.RoomPlaceService;
+import com.together.smwu.domain.roomPlace.dto.PlaceDetailResponse;
+import com.together.smwu.domain.roomPlace.dto.RoomListResponse;
 import com.together.smwu.domain.roomPlace.dto.RoomPlaceRequest;
 import com.together.smwu.domain.roomPlace.dto.RoomPlaceResponse;
 import com.together.smwu.domain.security.security.CurrentUser;
@@ -39,25 +41,25 @@ public class RoomPlaceController {
                 .build();
     }
 
-    @ApiOperation(value = "Room의 모든 Place조회", notes = "roomId로 모든 Place를 조회한다.")
+    @ApiOperation(value = "Place가 속한 모든 Room조회", notes = "placeId로 모든 Room을 조회한다.")
     @GetMapping("/all/room/{placeId}")
-    public ResponseEntity<List<RoomPlaceResponse>> findAllRooms(
+    public ResponseEntity<RoomListResponse> findAllRooms(
             @ApiParam(value = "placeId", required = true) @PathVariable Long placeId,
             @CurrentUser User user) {
-        List<RoomPlaceResponse> responses = roomPlaceService.findAllByPlaceId(placeId);
-        return ResponseEntity.ok(responses);
+        RoomListResponse response = roomPlaceService.findAllByPlaceId(placeId);
+        return ResponseEntity.ok(response);
     }
 
-    @ApiOperation(value = "Place가 속한 모든 Room조회", notes = "placeId로 모든 Room을 조회한다.")
+    @ApiOperation(value = "Room의 모든 Place조회", notes = "roomId로 등록된 모든 Place를 조회한다.")
     @GetMapping("/all/place/{roomId}")
-    public ResponseEntity<List<RoomPlaceResponse>> findAllPlaces(
+    public ResponseEntity<List<PlaceDetailResponse>> findAllPlaces(
             @ApiParam(value = "roomId", required = true) @PathVariable Long roomId,
             @CurrentUser User user) {
-        List<RoomPlaceResponse> responses = roomPlaceService.findAllByRoomId(roomId);
+        List<PlaceDetailResponse> responses = roomPlaceService.findAllByRoomId(roomId);
         return ResponseEntity.ok(responses);
     }
 
-    @ApiOperation(value = "Room에 속한 Place조회")
+    @ApiOperation(value = "RoomPlace Detail조회", notes = "roomPlaceId로 Detail정보를 조회한다.")
     @GetMapping("/{roomPlaceId}")
     public ResponseEntity<RoomPlaceResponse> findByRoomPlaceId(
             @ApiParam(value = "roomPlaceId", required = true) @PathVariable Long roomPlaceId){
@@ -65,21 +67,21 @@ public class RoomPlaceController {
         return ResponseEntity.ok(response);
     }
 
-    @ApiOperation(value = "Place가 속한 모든 Room삭제")
-    @DeleteMapping("/room/{roomId}")
+    @ApiOperation(value = "Room에서 Place 삭제")
+    @DeleteMapping("/{roomPlaceId}")
+    public ResponseEntity<Void> deletePlaceFromRoom(
+            @ApiParam(value = "roomPlaceId", required = true) @PathVariable Long roomPlaceId,
+            @CurrentUser User user) {
+        roomPlaceService.deletePlaceFromRoom(roomPlaceId);
+        return ResponseEntity.noContent().build();
+    }
+
+    @ApiOperation(value = "Room에 속한 모든 Place삭제")
+    @DeleteMapping("/{roomId}")
     public ResponseEntity<Void> deleteAllPlaces(
             @ApiParam(value = "roomId", required = true) @PathVariable Long roomId,
             @CurrentUser User user) {
         roomPlaceService.deleteAllPlacesByRoomId(roomId);
-        return ResponseEntity.noContent().build();
-    }
-
-    @ApiOperation(value = "Room이 속한 모든 Place삭제")
-    @DeleteMapping("/place/{placeId}")
-    public ResponseEntity<Void> deleteAllRooms(
-            @ApiParam(value = "placeId", required = true) @PathVariable Long placeId,
-            @CurrentUser User user) {
-        roomPlaceService.deleteAllRoomsByPlaceId(placeId);
         return ResponseEntity.noContent().build();
     }
 }

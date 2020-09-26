@@ -12,6 +12,7 @@ public class RoomResponse {
     private String title;
     private String content;
     private String imageUrl;
+    private Boolean hasCredential;
     private Timestamp createdTime;
     private List<String> tags;
     private Master master;
@@ -24,16 +25,22 @@ public class RoomResponse {
         this.title = room.getTitle();
         this.content = room.getContent();
         this.imageUrl = room.getImageUrl();
+        this.hasCredential = hasCredential(room.getCredential());
         this.createdTime = room.getCreatedTime();
         this.tags = room.getTagNames();
     }
 
-    private RoomResponse(Long id, String title, String content, String imageUrl,
+    private Boolean hasCredential(String credential) {
+        return null != credential;
+    }
+
+    private RoomResponse(Long id, String title, String content, String imageUrl, String credential,
                          Timestamp createdTime, List<String> tags, Master masterUser) {
         this.id = id;
         this.title = title;
         this.content = content;
         this.imageUrl = imageUrl;
+        this.hasCredential = hasCredential(credential);
         this.createdTime = createdTime;
         this.tags = tags;
         this.master = masterUser;
@@ -46,6 +53,7 @@ public class RoomResponse {
                 room.getTitle(),
                 room.getContent(),
                 room.getImageUrl(),
+                room.getCredential(),
                 room.getCreatedTime(),
                 room.getTagNames(),
                 roomDetailInfo.getMaster());
@@ -76,6 +84,10 @@ public class RoomResponse {
 
     public Timestamp getCreatedTime() {
         return createdTime;
+    }
+
+    public Boolean getHasCredential() {
+        return hasCredential;
     }
 
     public List<String> getTags() {
