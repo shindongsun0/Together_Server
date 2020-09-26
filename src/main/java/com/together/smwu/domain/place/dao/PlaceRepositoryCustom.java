@@ -5,6 +5,8 @@ import com.together.smwu.domain.place.domain.Place;
 import java.util.List;
 
 public interface PlaceRepositoryCustom {
-
     List<Place> findAll();
+
+    List<Place> findPlaceNameContains(String name);
+
 }

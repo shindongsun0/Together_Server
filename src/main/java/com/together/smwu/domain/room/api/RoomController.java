@@ -12,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
 import java.net.URI;
 import java.util.List;
 
@@ -32,7 +33,7 @@ public class RoomController {
     @PostMapping
     public ResponseEntity<Void> createRoom(
             @RequestBody RoomRequest request,
-            @CurrentUser User user) {
+            @CurrentUser User user) throws IOException {
         Long roomId = roomService.create(request, user);
         return ResponseEntity
                 .created(URI.create(ROOM_URI + "/" + roomId))
@@ -44,7 +45,7 @@ public class RoomController {
     public ResponseEntity<Void> updateRoom(
             @ApiParam(value = "roomId", required = true) @PathVariable Long roomId,
             @RequestBody RoomRequest request,
-            @CurrentUser User user) {
+            @CurrentUser User user) throws IOException {
         roomService.update(roomId, request, user);
         return ResponseEntity.noContent().build();
     }
