@@ -4,13 +4,14 @@ import com.together.smwu.domain.room.dto.RoomRequest;
 import com.together.smwu.domain.room.dto.RoomResponse;
 import com.together.smwu.domain.user.domain.User;
 
+import java.io.IOException;
 import java.util.List;
 
 public interface RoomService {
 
-    Long create(RoomRequest request, User user);
+    Long create(RoomRequest request, User user) throws IOException;
 
-    void update(Long roomId, RoomRequest request, User user);
+    void update(Long roomId, RoomRequest request, User user) throws IOException;
 
     List<RoomResponse> findByTitle(String roomTitle, User user);
 

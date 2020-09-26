@@ -1,6 +1,7 @@
 package com.together.smwu.domain.room.dto;
 
 import com.together.smwu.domain.room.domain.Room;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.constraints.NotNull;
 import java.util.List;
@@ -11,14 +12,14 @@ public class RoomRequest {
     @NotNull
     private String title;
     private String content;
-    private String imageUrl;
+    private MultipartFile imageUrl;
     private String credential;
     private List<String> tags;
 
     private RoomRequest() {
     }
 
-    private RoomRequest(String title, String content, String imageUrl,
+    private RoomRequest(String title, String content, MultipartFile imageUrl,
                         String credential, List<String> tags) {
         this.title = title;
         this.content = content;
@@ -27,14 +28,11 @@ public class RoomRequest {
         this.tags = tags;
     }
 
-    public Room toRoomEntity() {
-        if (null == imageUrl) {
-            imageUrl = BASE_IMAGE_URL;
-        }
+    public Room toRoomEntity(String roomImageUrl) {
         return Room.builder()
                 .title(title)
                 .content(content)
-                .imageUrl(imageUrl)
+                .imageUrl(roomImageUrl)
                 .credential(credential)
                 .build();
     }
@@ -47,7 +45,7 @@ public class RoomRequest {
         return content;
     }
 
-    public String getImageUrl(){
+    public MultipartFile getImageUrl(){
         return imageUrl;
     }
 
