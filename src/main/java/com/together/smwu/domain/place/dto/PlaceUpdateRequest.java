@@ -7,7 +7,7 @@ import javax.validation.constraints.NotNull;
 public class PlaceUpdateRequest {
     @NotNull
     private String name;
-    private Integer category;
+    private String category;
     private Long mapX;
     private Long mapY;
     private String content;
@@ -17,7 +17,7 @@ public class PlaceUpdateRequest {
     public PlaceUpdateRequest() {
     }
 
-    public PlaceUpdateRequest(String name, Integer category, Long mapX, Long mapY, String content, String location,
+    public PlaceUpdateRequest(String name, String category, Long mapX, Long mapY, String content, String location,
                               Long placeId) {
         this.name = name;
         this.category = category;
@@ -44,7 +44,7 @@ public class PlaceUpdateRequest {
         return this.name;
     }
 
-    public Integer getCategory() {
+    public String getCategory() {
         return this.category;
     }
 

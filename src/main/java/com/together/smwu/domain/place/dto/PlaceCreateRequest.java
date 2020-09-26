@@ -9,7 +9,7 @@ public class PlaceCreateRequest {
 
     @NotNull
     private String name;
-    private Integer category;
+    private String category;
     private Long mapX;
     private Long mapY;
     private String content;
@@ -20,7 +20,7 @@ public class PlaceCreateRequest {
     public PlaceCreateRequest() {
     }
 
-    public PlaceCreateRequest(String name, Integer category, Long mapX, Long mapY,
+    public PlaceCreateRequest(String name, String category, Long mapX, Long mapY,
                               String content, String location, String mainImageUrl,
                               Long roomId) {
         this.name = name;
@@ -52,7 +52,7 @@ public class PlaceCreateRequest {
         return this.name;
     }
 
-    public Integer getCategory() {
+    public String getCategory() {
         return this.category;
     }
 
