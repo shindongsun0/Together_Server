@@ -6,12 +6,15 @@ public class RoomPlaceRequest {
 
     private Long placeId;
 
+    private String comment;
+
     public RoomPlaceRequest() {
     }
 
-    public RoomPlaceRequest(Long roomId, Long placeId) {
+    public RoomPlaceRequest(Long roomId, Long placeId, String comment) {
         this.roomId = roomId;
         this.placeId = placeId;
+        this.comment = comment;
     }
 
     public Long getRoomId() {
@@ -20,5 +23,9 @@ public class RoomPlaceRequest {
 
     public Long getPlaceId() {
         return placeId;
+    }
+
+    public String getComment() {
+        return comment;
     }
 }

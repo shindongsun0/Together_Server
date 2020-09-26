@@ -10,6 +10,7 @@ public class PlaceDetailResponse {
     private Long roomId;
     private Place place;
     private Timestamp postTime;
+    private String comment;
 
     public PlaceDetailResponse() {
     }
@@ -19,6 +20,7 @@ public class PlaceDetailResponse {
         this.roomId = entity.getRoom().getId();
         this.place = entity.getPlace();
         this.postTime = entity.getPostTime();
+        this.comment = entity.getComment();
     }
 
     public Long getRoomPlaceId() {
@@ -35,5 +37,9 @@ public class PlaceDetailResponse {
 
     public Timestamp getPostTime() {
         return postTime;
+    }
+
+    public String getComment() {
+        return comment;
     }
 }
