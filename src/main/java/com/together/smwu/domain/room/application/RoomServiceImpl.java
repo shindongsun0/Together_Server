@@ -38,8 +38,8 @@ public class RoomServiceImpl implements RoomService {
         this.s3Uploader = s3Uploader;
     }
 
-    public Long create(RoomRequest request, User user) throws IOException {
-        String roomImageUrl = getRoomImageUrl(request);
+    public Long create(RoomRequest request, MultipartFile file, User user) throws IOException {
+        String roomImageUrl = getRoomImageUrl(request, file);
         final Room room = request.toRoomEntity(roomImageUrl);
         room.addTag(request.getTags());
         enrollRoomWithMasterUser(user, room);
@@ -47,18 +47,17 @@ public class RoomServiceImpl implements RoomService {
         return room.getId();
     }
 
-    private String getRoomImageUrl(RoomRequest request) throws IOException {
-        MultipartFile roomImage = request.getImageUrl();
-        if (roomImage.isEmpty()) {
+    private String getRoomImageUrl(RoomRequest request, MultipartFile file) throws IOException {
+        if (file.isEmpty()) {
             return DEFAULT_ROOM_IMAGE;
         }
         String roomFileName = "room/" + request.getTitle();
-        return s3Uploader.upload(roomImage, roomFileName);
+        return s3Uploader.upload(file, roomFileName);
     }
 
     @Transactional
-    public void update(Long roomId, RoomRequest request, User user) throws IOException {
-        String roomImageUrl = getRoomImageUrl(request);
+    public void update(Long roomId, RoomRequest request, MultipartFile file, User user) throws IOException {
+        String roomImageUrl = getRoomImageUrl(request, file);
         final Room room = roomRepository.findById(roomId)
                 .orElseThrow(RoomNotFoundException::new);
         room.addTag(request.getTags());
