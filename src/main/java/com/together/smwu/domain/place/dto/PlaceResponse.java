@@ -11,7 +11,7 @@ import java.util.stream.Collectors;
 public class PlaceResponse {
     private Long id;
     private String name;
-    private Integer category;
+    private String category;
     private Long mapX;
     private Long mapY;
     private String content;
@@ -22,7 +22,7 @@ public class PlaceResponse {
     public PlaceResponse(){}
 
     @Builder
-    public PlaceResponse(Long id, String name, Integer category, Long mapX,
+    public PlaceResponse(Long id, String name, String category, Long mapX,
                          Long mapY, String content, String location, String mainImageUrl,
                          Timestamp postTime) {
         this.id = id;
@@ -76,7 +76,7 @@ public class PlaceResponse {
         return this.name;
     }
 
-    public Integer getCategory() {
+    public String getCategory() {
         return this.category;
     }
 
