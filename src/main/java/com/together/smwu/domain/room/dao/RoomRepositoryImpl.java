@@ -27,7 +27,15 @@ public class RoomRepositoryImpl implements RoomRepositoryCustom {
         return queryFactory
                 .selectFrom(room)
                 .leftJoin(room.tags, tag).fetchJoin()
-                .where(tag.name.eq(tagName))
+                .where(tag.name.contains(tagName))
+                .fetch();
+    }
+
+    @Override
+    public List<Room> findByTitle(String title) {
+        return queryFactory
+                .selectFrom(room)
+                .where(room.title.contains(title))
                 .fetch();
     }
 }

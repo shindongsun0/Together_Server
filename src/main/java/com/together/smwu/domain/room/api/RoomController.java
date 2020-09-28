@@ -58,14 +58,23 @@ public class RoomController {
     public ResponseEntity<List<RoomResponse>> findByTitle(
             @ApiParam(value = "title", required = true) @RequestParam String title,
             @CurrentUser User user) {
-        List<RoomResponse> responses = roomService.findByTitle(title, user);
+        List<RoomResponse> responses = roomService.findByTitle(title, user.getUserId());
+        return ResponseEntity.ok(responses);
+    }
+
+    @ApiOperation(value = "Room 조회", notes = "Tag name으로 Room을 조회한다.")
+    @GetMapping("/tag")
+    public ResponseEntity<List<RoomResponse>> findRoomByTags(
+            @ApiParam(value = "tagName", required = true) @RequestParam String tagName,
+            @CurrentUser User user) {
+        List<RoomResponse> responses = roomService.findByTagName(tagName, user.getUserId());
         return ResponseEntity.ok(responses);
     }
 
     @ApiOperation(value = "Room 찾기", notes = "Room을 roomId로 찾는다.")
     @GetMapping("/{roomId}")
     public ResponseEntity<RoomResponse> findByTitle(
-            @ApiParam(value = "title", required = true) @PathVariable Long roomId,
+            @ApiParam(value = "roomId", required = true) @PathVariable Long roomId,
             @CurrentUser User user) {
         RoomResponse roomResponse = roomService.findByRoomId(roomId, user);
         return ResponseEntity.ok(roomResponse);
