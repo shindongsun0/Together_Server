@@ -30,15 +30,17 @@ public class RoomPlace {
     @JoinColumn(name = "place_id", nullable = false)
     private Place place;
 
+    private String comment;
+
     @CreationTimestamp
     @Column(name = "post_time", nullable = false)
     Timestamp postTime;
 
     @Builder
-    public RoomPlace(Room room, Place place, Timestamp postTime) {
+    public RoomPlace(Room room, Place place, String comment) {
         this.room = room;
         this.place = place;
-        this.postTime = postTime;
+        this.comment = comment;
     }
 
     public Long getId() {
@@ -51,6 +53,10 @@ public class RoomPlace {
 
     public Place getPlace() {
         return place;
+    }
+
+    public String getComment() {
+        return comment;
     }
 
     public Timestamp getPostTime() {

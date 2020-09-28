@@ -11,6 +11,7 @@ import io.swagger.annotations.ApiParam;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.net.URI;
@@ -32,9 +33,10 @@ public class RoomController {
     @ApiOperation(value = "Room 생성", notes = "Room을 생성한다")
     @PostMapping
     public ResponseEntity<Void> createRoom(
-            @RequestBody RoomRequest request,
+            @RequestPart RoomRequest request,
+            @RequestPart(required = false) MultipartFile imageFile,
             @CurrentUser User user) throws IOException {
-        Long roomId = roomService.create(request, user);
+        Long roomId = roomService.create(request, imageFile, user);
         return ResponseEntity
                 .created(URI.create(ROOM_URI + "/" + roomId))
                 .build();
@@ -44,9 +46,10 @@ public class RoomController {
     @PutMapping("/{roomId}")
     public ResponseEntity<Void> updateRoom(
             @ApiParam(value = "roomId", required = true) @PathVariable Long roomId,
-            @RequestBody RoomRequest request,
+            @RequestPart RoomRequest request,
+            @RequestPart(required = false) MultipartFile imageFile,
             @CurrentUser User user) throws IOException {
-        roomService.update(roomId, request, user);
+        roomService.update(roomId, request, imageFile, user);
         return ResponseEntity.noContent().build();
     }
 
