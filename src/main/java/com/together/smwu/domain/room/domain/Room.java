@@ -57,7 +57,7 @@ public class Room {
 
     @Builder
     public Room(String title, String content, String imageUrl,
-                String credential, List<String> tags) {
+                String credential) {
         this.title = title;
         this.content = content;
         this.imageUrl = imageUrl;
@@ -68,6 +68,7 @@ public class Room {
         List<Tag> createdTags = tags.stream()
                 .map(this::createTag)
                 .collect(Collectors.toList());
+        this.tags.clear();
         this.tags.addAll(createdTags);
     }
 

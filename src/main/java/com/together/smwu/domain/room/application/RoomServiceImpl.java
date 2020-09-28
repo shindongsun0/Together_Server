@@ -39,7 +39,7 @@ public class RoomServiceImpl implements RoomService {
     }
 
     public Long create(RoomRequest request, MultipartFile file, User user) throws IOException {
-        String roomImageUrl = getRoomImageUrl(request, file);
+        String roomImageUrl = createRoomImageUrl(request, file);
         final Room room = request.toRoomEntity(roomImageUrl);
         room.addTag(request.getTags());
         enrollRoomWithMasterUser(user, room);
@@ -47,8 +47,8 @@ public class RoomServiceImpl implements RoomService {
         return room.getId();
     }
 
-    private String getRoomImageUrl(RoomRequest request, MultipartFile file) throws IOException {
-        if (file.isEmpty()) {
+    private String createRoomImageUrl(RoomRequest request, MultipartFile file) throws IOException {
+        if (null == file) {
             return DEFAULT_ROOM_IMAGE;
         }
         String roomFileName = "room/" + request.getTitle();
@@ -57,25 +57,37 @@ public class RoomServiceImpl implements RoomService {
 
     @Transactional
     public void update(Long roomId, RoomRequest request, MultipartFile file, User user) throws IOException {
-        String roomImageUrl = getRoomImageUrl(request, file);
         final Room room = roomRepository.findById(roomId)
                 .orElseThrow(RoomNotFoundException::new);
+        String roomImageUrl = getRoomImageUrl(request, file, room);
         room.addTag(request.getTags());
         room.update(request.toRoomEntity(roomImageUrl));
         roomRepository.save(room);
     }
 
+    private String getRoomImageUrl(RoomRequest request, MultipartFile file, Room room) throws IOException {
+        if(null != file){
+            return createRoomImageUrl(request, file);
+        } else{
+            return room.getImageUrl();
+        }
+    }
+
     @Transactional
     public List<RoomResponse> findByTitle(String roomTitle, User user) {
         List<Room> rooms = roomRepository.findByTitle(roomTitle);
-        if (rooms.isEmpty()) {
-            throw new RoomNotFoundException(roomTitle);
-        }
+        checkIsEmptyRoom(roomTitle, rooms);
         List<RoomDetailInfo> roomDetailInfos = rooms.stream()
                 .map(roomEnrollmentRepository::getMasterUser)
                 .collect(Collectors.toList());
 
         return RoomResponse.listFrom(roomDetailInfos);
+    }
+
+    private void checkIsEmptyRoom(String roomAttribute, List<Room> rooms) {
+        if (rooms.isEmpty()) {
+            throw new RoomNotFoundException(roomAttribute);
+        }
     }
 
     @Transactional
@@ -115,9 +127,7 @@ public class RoomServiceImpl implements RoomService {
     @Transactional
     public List<RoomResponse> findByTagName(String tagName) {
         List<Room> rooms = roomRepository.findByTagName(tagName);
-        if (rooms.isEmpty()) {
-            throw new RoomNotFoundException(tagName);
-        }
+        checkIsEmptyRoom(tagName, rooms);
         List<RoomDetailInfo> roomDetailInfos = rooms.stream()
                 .map(roomEnrollmentRepository::getMasterUser)
                 .collect(Collectors.toList());
