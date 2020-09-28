@@ -35,7 +35,7 @@ public class RoomEnrollmentRepositoryImpl implements RoomEnrollmentRepositoryCus
     @Override
     public long deleteAllByRoom(Room room) {
         return queryFactory.delete(roomEnrollment)
-                .where(roomEnrollment.room.eq(room))
+                .where(roomEnrollment.room.eq(room).and(roomEnrollment.isMaster.isFalse()))
                 .execute();
     }
 
