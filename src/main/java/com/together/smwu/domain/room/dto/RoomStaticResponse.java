@@ -6,7 +6,7 @@ import java.sql.Timestamp;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class RoomResponse {
+public class RoomStaticResponse {
 
     private Long id;
     private String title;
@@ -16,12 +16,11 @@ public class RoomResponse {
     private Timestamp createdTime;
     private List<String> tags;
     private Master master;
-    private Boolean isEnrolled;
 
-    private RoomResponse() {
+    private RoomStaticResponse() {
     }
 
-    public RoomResponse(Room room) {
+    public RoomStaticResponse(Room room) {
         this.id = room.getId();
         this.title = room.getTitle();
         this.content = room.getContent();
@@ -35,8 +34,8 @@ public class RoomResponse {
         return null != credential;
     }
 
-    private RoomResponse(Long id, String title, String content, String imageUrl, String credential,
-                         Timestamp createdTime, List<String> tags, Master masterUser, Boolean isEnrolled) {
+    private RoomStaticResponse(Long id, String title, String content, String imageUrl, String credential,
+                         Timestamp createdTime, List<String> tags, Master masterUser) {
         this.id = id;
         this.title = title;
         this.content = content;
@@ -45,12 +44,11 @@ public class RoomResponse {
         this.createdTime = createdTime;
         this.tags = tags;
         this.master = masterUser;
-        this.isEnrolled = isEnrolled;
     }
 
-    public static RoomResponse from(RoomDetailInfo roomDetailInfo) {
-        Room room = roomDetailInfo.getRoom();
-        return new RoomResponse(
+    public static RoomStaticResponse from(RoomWithMasterInfo roomWithMasterInfo) {
+        Room room = roomWithMasterInfo.getRoom();
+        return new RoomStaticResponse(
                 room.getId(),
                 room.getTitle(),
                 room.getContent(),
@@ -58,13 +56,12 @@ public class RoomResponse {
                 room.getCredential(),
                 room.getCreatedTime(),
                 room.getTagNames(),
-                roomDetailInfo.getMaster(),
-                roomDetailInfo.getIsEnrolled());
+                roomWithMasterInfo.getMaster());
     }
 
-    public static List<RoomResponse> listFrom(List<RoomDetailInfo> roomDetailInfos) {
-        return roomDetailInfos.stream()
-                .map(RoomResponse::from)
+    public static List<RoomStaticResponse> listFrom(List<RoomWithMasterInfo> roomWithMasterInfos) {
+        return roomWithMasterInfos.stream()
+                .map(RoomStaticResponse::from)
                 .collect(Collectors.toList());
     }
 
@@ -99,6 +96,4 @@ public class RoomResponse {
     public Master getMaster() {
         return master;
     }
-
-    public Boolean getIsEnrolled() {return isEnrolled;}
 }

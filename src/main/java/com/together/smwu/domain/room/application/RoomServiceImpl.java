@@ -2,9 +2,7 @@ package com.together.smwu.domain.room.application;
 
 import com.together.smwu.domain.room.dao.RoomRepository;
 import com.together.smwu.domain.room.domain.Room;
-import com.together.smwu.domain.room.dto.RoomDetailInfo;
-import com.together.smwu.domain.room.dto.RoomRequest;
-import com.together.smwu.domain.room.dto.RoomResponse;
+import com.together.smwu.domain.room.dto.*;
 import com.together.smwu.domain.room.exception.RoomNotFoundException;
 import com.together.smwu.domain.roomEnrollment.dao.RoomEnrollmentRepository;
 import com.together.smwu.domain.roomEnrollment.domain.RoomEnrollment;
@@ -74,13 +72,12 @@ public class RoomServiceImpl implements RoomService {
     }
 
     @Transactional
-    public List<RoomResponse> findByTitle(String roomTitle, User user) {
+    public List<RoomResponse> findByTitle(String roomTitle, Long userId) {
         List<Room> rooms = roomRepository.findByTitle(roomTitle);
         checkIsEmptyRoom(roomTitle, rooms);
         List<RoomDetailInfo> roomDetailInfos = rooms.stream()
-                .map(roomEnrollmentRepository::getMasterUser)
+                .map(room -> roomEnrollmentRepository.getRoomDetailInfo(room, userId))
                 .collect(Collectors.toList());
-
         return RoomResponse.listFrom(roomDetailInfos);
     }
 
@@ -93,24 +90,24 @@ public class RoomServiceImpl implements RoomService {
     @Transactional
     public RoomResponse findByRoomId(Long roomId, User user) {
         Room room = findById(roomId);
-        RoomDetailInfo roomDetailInfo = roomEnrollmentRepository.getMasterUser(room);
+        RoomDetailInfo roomDetailInfo = roomEnrollmentRepository.getRoomDetailInfo(room, user.getUserId());
         return RoomResponse.from(roomDetailInfo);
     }
 
     @Transactional
-    public List<RoomResponse> findAllRooms() {
+    public List<RoomStaticResponse> findAllRooms() {
         List<Room> rooms = roomRepository.getAllRooms();
-        List<RoomDetailInfo> roomDetailInfos = getRoomDetailInfos(rooms);
-        return RoomResponse.listFrom(roomDetailInfos);
+        List<RoomWithMasterInfo> roomWithMasterInfos = getRoomWithMasterInfos(rooms);
+        return RoomStaticResponse.listFrom(roomWithMasterInfos);
     }
 
-    private List<RoomDetailInfo> getRoomDetailInfos(List<Room> rooms) {
-        List<RoomDetailInfo> roomDetailInfos = new java.util.ArrayList<>(Collections.emptyList());
+    private List<RoomWithMasterInfo> getRoomWithMasterInfos(List<Room> rooms) {
+        List<RoomWithMasterInfo> roomWithMasterInfos = new java.util.ArrayList<>(Collections.emptyList());
         for (Room room : rooms) {
-            RoomDetailInfo addR = roomEnrollmentRepository.getMasterUser(room);
-            roomDetailInfos.add(addR);
+            RoomWithMasterInfo roomWithMasterInfo = roomEnrollmentRepository.getRoomMasterInfo(room);
+            roomWithMasterInfos.add(roomWithMasterInfo);
         }
-        return roomDetailInfos;
+        return roomWithMasterInfos;
     }
 
     @Transactional
@@ -125,11 +122,11 @@ public class RoomServiceImpl implements RoomService {
     }
 
     @Transactional
-    public List<RoomResponse> findByTagName(String tagName) {
+    public List<RoomResponse> findByTagName(String tagName, Long userId) {
         List<Room> rooms = roomRepository.findByTagName(tagName);
         checkIsEmptyRoom(tagName, rooms);
         List<RoomDetailInfo> roomDetailInfos = rooms.stream()
-                .map(roomEnrollmentRepository::getMasterUser)
+                .map(room -> roomEnrollmentRepository.getRoomDetailInfo(room, userId))
                 .collect(Collectors.toList());
 
         return RoomResponse.listFrom(roomDetailInfos);
