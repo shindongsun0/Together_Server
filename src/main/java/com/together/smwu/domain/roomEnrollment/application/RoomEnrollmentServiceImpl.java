@@ -63,7 +63,7 @@ public class RoomEnrollmentServiceImpl implements RoomEnrollmentService {
         Room room = roomRepository.findById(request.getRoomId())
                 .orElseThrow(RoomNotFoundException::new);
 
-        if (room.getCredential().isEmpty()) {
+        if (null != room.getCredential()) {
             if (!isSavedCredential(request, room)) {
                 throw new RoomNotAuthorizedException();
             }
