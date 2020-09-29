@@ -2,6 +2,7 @@ package com.together.smwu.domain.roomEnrollment.dao;
 
 import com.together.smwu.domain.room.domain.Room;
 import com.together.smwu.domain.room.dto.RoomDetailInfo;
+import com.together.smwu.domain.room.dto.RoomWithMasterInfo;
 import com.together.smwu.domain.roomEnrollment.domain.RoomEnrollment;
 import com.together.smwu.domain.user.domain.User;
 
@@ -10,19 +11,21 @@ import java.util.Optional;
 
 public interface RoomEnrollmentRepositoryCustom {
 
-    long deleteAllByRoomId(long roomId);
+    long deleteAllByRoomId(Long roomId);
 
     long deleteAllByRoom(Room room);
 
-    Optional<RoomEnrollment> findByUserAndRoom(long userId, long roomId);
+    Optional<RoomEnrollment> findByUserAndRoom(Long userId, Long roomId);
 
-    long deleteAllByUserId(long userId);
+    long deleteAllByUserId(Long userId);
 
-    RoomEnrollment findByUserId(long userId);
+    Optional<RoomEnrollment> findByUserId(Long userId);
 
-    boolean checkIsMasterOfRoom(long userId, long roomId);
+    boolean checkIsMasterOfRoom(Long userId, Long roomId);
 
-    RoomDetailInfo getMasterUser(Room room);
+    RoomDetailInfo getRoomDetailInfo(Room room, Long userId);
+
+    RoomWithMasterInfo getRoomMasterInfo(Room room);
 
     List<RoomDetailInfo> findRoomDetailInfosByUser(User user);
 }
