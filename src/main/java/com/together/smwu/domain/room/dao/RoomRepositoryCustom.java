@@ -9,4 +9,6 @@ public interface RoomRepositoryCustom {
     List<Room> getAllRooms();
 
     List<Room> findByTagName(String tagName);
+
+    List<Room> findByTitle(String title);
 }

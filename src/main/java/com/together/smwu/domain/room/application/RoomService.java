@@ -2,6 +2,7 @@ package com.together.smwu.domain.room.application;
 
 import com.together.smwu.domain.room.dto.RoomRequest;
 import com.together.smwu.domain.room.dto.RoomResponse;
+import com.together.smwu.domain.room.dto.RoomStaticResponse;
 import com.together.smwu.domain.user.domain.User;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -14,13 +15,13 @@ public interface RoomService {
 
     void update(Long roomId, RoomRequest request, MultipartFile imageFile, User user) throws IOException;
 
-    List<RoomResponse> findByTitle(String roomTitle, User user);
+    List<RoomResponse> findByTitle(String roomTitle, Long userId);
 
     RoomResponse findByRoomId(Long roomId, User user);
 
-    List<RoomResponse> findAllRooms();
+    List<RoomStaticResponse> findAllRooms();
 
     void deleteRoomById(Long roomId, User user);
 
-    List<RoomResponse> findByTagName(String tagName);
+    List<RoomResponse> findByTagName(String tagName, Long userId);
 }

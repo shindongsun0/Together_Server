@@ -11,4 +11,5 @@ import lombok.NoArgsConstructor;
 public class RoomDetailInfo {
     private Room room;
     private Master master;
+    private Boolean isEnrolled;
 }
