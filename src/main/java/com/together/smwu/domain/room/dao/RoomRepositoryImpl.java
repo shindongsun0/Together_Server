@@ -28,6 +28,7 @@ public class RoomRepositoryImpl implements RoomRepositoryCustom {
                 .selectFrom(room)
                 .leftJoin(room.tags, tag).fetchJoin()
                 .where(tag.name.contains(tagName))
+                .distinct()
                 .fetch();
     }
 
@@ -36,6 +37,7 @@ public class RoomRepositoryImpl implements RoomRepositoryCustom {
         return queryFactory
                 .selectFrom(room)
                 .where(room.title.contains(title))
+                .distinct()
                 .fetch();
     }
 }
