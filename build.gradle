@@ -52,6 +52,9 @@ dependencies {
     implementation 'org.springframework.cloud:spring-cloud-starter-aws'
     compile 'pl.allegro.tech.boot:handlebars-spring-boot-starter:0.3.0'
 
+    // selenium
+    compile group: 'org.seleniumhq.selenium', name: 'selenium-java', version: '3.13.0'
+
     // querydsl
     compile 'com.querydsl:querydsl-apt'
     compile 'com.querydsl:querydsl-jpa'
