@@ -42,3 +42,4 @@ out/
 .idea/
 /keystore.p12
 /src/main/generated/
+/log.config.path_IS_UNDEFINED/
