@@ -11,6 +11,7 @@ import io.swagger.annotations.ApiParam;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.net.URI;
@@ -32,9 +33,10 @@ public class RoomController {
     @ApiOperation(value = "Room 생성", notes = "Room을 생성한다")
     @PostMapping
     public ResponseEntity<Void> createRoom(
-            @RequestBody RoomRequest request,
+            @RequestPart RoomRequest request,
+            @RequestPart(required = false) MultipartFile imageFile,
             @CurrentUser User user) throws IOException {
-        Long roomId = roomService.create(request, user);
+        Long roomId = roomService.create(request, imageFile, user);
         return ResponseEntity
                 .created(URI.create(ROOM_URI + "/" + roomId))
                 .build();
@@ -44,9 +46,10 @@ public class RoomController {
     @PutMapping("/{roomId}")
     public ResponseEntity<Void> updateRoom(
             @ApiParam(value = "roomId", required = true) @PathVariable Long roomId,
-            @RequestBody RoomRequest request,
+            @RequestPart RoomRequest request,
+            @RequestPart(required = false) MultipartFile imageFile,
             @CurrentUser User user) throws IOException {
-        roomService.update(roomId, request, user);
+        roomService.update(roomId, request, imageFile, user);
         return ResponseEntity.noContent().build();
     }
 
@@ -55,14 +58,23 @@ public class RoomController {
     public ResponseEntity<List<RoomResponse>> findByTitle(
             @ApiParam(value = "title", required = true) @RequestParam String title,
             @CurrentUser User user) {
-        List<RoomResponse> responses = roomService.findByTitle(title, user);
+        List<RoomResponse> responses = roomService.findByTitle(title, user.getUserId());
+        return ResponseEntity.ok(responses);
+    }
+
+    @ApiOperation(value = "Room 조회", notes = "Tag name으로 Room을 조회한다.")
+    @GetMapping("/tag")
+    public ResponseEntity<List<RoomResponse>> findRoomByTags(
+            @ApiParam(value = "tagName", required = true) @RequestParam String tagName,
+            @CurrentUser User user) {
+        List<RoomResponse> responses = roomService.findByTagName(tagName, user.getUserId());
         return ResponseEntity.ok(responses);
     }
 
     @ApiOperation(value = "Room 찾기", notes = "Room을 roomId로 찾는다.")
     @GetMapping("/{roomId}")
     public ResponseEntity<RoomResponse> findByTitle(
-            @ApiParam(value = "title", required = true) @PathVariable Long roomId,
+            @ApiParam(value = "roomId", required = true) @PathVariable Long roomId,
             @CurrentUser User user) {
         RoomResponse roomResponse = roomService.findByRoomId(roomId, user);
         return ResponseEntity.ok(roomResponse);

@@ -2,9 +2,7 @@ package com.together.smwu.domain.room.application;
 
 import com.together.smwu.domain.room.dao.RoomRepository;
 import com.together.smwu.domain.room.domain.Room;
-import com.together.smwu.domain.room.dto.RoomDetailInfo;
-import com.together.smwu.domain.room.dto.RoomRequest;
-import com.together.smwu.domain.room.dto.RoomResponse;
+import com.together.smwu.domain.room.dto.*;
 import com.together.smwu.domain.room.exception.RoomNotFoundException;
 import com.together.smwu.domain.roomEnrollment.dao.RoomEnrollmentRepository;
 import com.together.smwu.domain.roomEnrollment.domain.RoomEnrollment;
@@ -38,8 +36,8 @@ public class RoomServiceImpl implements RoomService {
         this.s3Uploader = s3Uploader;
     }
 
-    public Long create(RoomRequest request, User user) throws IOException {
-        String roomImageUrl = getRoomImageUrl(request);
+    public Long create(RoomRequest request, MultipartFile file, User user) throws IOException {
+        String roomImageUrl = createRoomImageUrl(request, file);
         final Room room = request.toRoomEntity(roomImageUrl);
         room.addTag(request.getTags());
         enrollRoomWithMasterUser(user, room);
@@ -47,59 +45,69 @@ public class RoomServiceImpl implements RoomService {
         return room.getId();
     }
 
-    private String getRoomImageUrl(RoomRequest request) throws IOException {
-        MultipartFile roomImage = request.getImageUrl();
-        if (roomImage.isEmpty()) {
+    private String createRoomImageUrl(RoomRequest request, MultipartFile file) throws IOException {
+        if (null == file) {
             return DEFAULT_ROOM_IMAGE;
         }
         String roomFileName = "room/" + request.getTitle();
-        return s3Uploader.upload(roomImage, roomFileName);
+        return s3Uploader.upload(file, roomFileName);
     }
 
     @Transactional
-    public void update(Long roomId, RoomRequest request, User user) throws IOException {
-        String roomImageUrl = getRoomImageUrl(request);
+    public void update(Long roomId, RoomRequest request, MultipartFile file, User user) throws IOException {
         final Room room = roomRepository.findById(roomId)
                 .orElseThrow(RoomNotFoundException::new);
+        String roomImageUrl = getRoomImageUrl(request, file, room);
         room.addTag(request.getTags());
         room.update(request.toRoomEntity(roomImageUrl));
         roomRepository.save(room);
     }
 
-    @Transactional
-    public List<RoomResponse> findByTitle(String roomTitle, User user) {
-        List<Room> rooms = roomRepository.findByTitle(roomTitle);
-        if (rooms.isEmpty()) {
-            throw new RoomNotFoundException(roomTitle);
+    private String getRoomImageUrl(RoomRequest request, MultipartFile file, Room room) throws IOException {
+        if(null != file){
+            return createRoomImageUrl(request, file);
+        } else{
+            return room.getImageUrl();
         }
-        List<RoomDetailInfo> roomDetailInfos = rooms.stream()
-                .map(roomEnrollmentRepository::getMasterUser)
-                .collect(Collectors.toList());
+    }
 
+    @Transactional
+    public List<RoomResponse> findByTitle(String roomTitle, Long userId) {
+        List<Room> rooms = roomRepository.findByTitle(roomTitle);
+        checkIsEmptyRoom(roomTitle, rooms);
+        List<RoomDetailInfo> roomDetailInfos = rooms.stream()
+                .map(room -> roomEnrollmentRepository.getRoomDetailInfo(room, userId))
+                .collect(Collectors.toList());
         return RoomResponse.listFrom(roomDetailInfos);
+    }
+
+    private void checkIsEmptyRoom(String roomAttribute, List<Room> rooms) {
+        if (rooms.isEmpty()) {
+            throw new RoomNotFoundException(roomAttribute);
+        }
     }
 
     @Transactional
     public RoomResponse findByRoomId(Long roomId, User user) {
         Room room = findById(roomId);
-        RoomDetailInfo roomDetailInfo = roomEnrollmentRepository.getMasterUser(room);
+        RoomDetailInfo roomDetailInfo = roomEnrollmentRepository.getRoomDetailInfo(room, user.getUserId());
         return RoomResponse.from(roomDetailInfo);
     }
 
     @Transactional
-    public List<RoomResponse> findAllRooms() {
+    public List<RoomStaticResponse> findAllRooms() {
         List<Room> rooms = roomRepository.getAllRooms();
-        List<RoomDetailInfo> roomDetailInfos = getRoomDetailInfos(rooms);
-        return RoomResponse.listFrom(roomDetailInfos);
+        List<RoomWithMasterInfo> roomWithMasterInfos = getRoomWithMasterInfos(rooms);
+        return RoomStaticResponse.listFrom(roomWithMasterInfos);
     }
 
-    private List<RoomDetailInfo> getRoomDetailInfos(List<Room> rooms) {
-        List<RoomDetailInfo> roomDetailInfos = new java.util.ArrayList<>(Collections.emptyList());
+    private List<RoomWithMasterInfo> getRoomWithMasterInfos(List<Room> rooms) {
+        List<RoomWithMasterInfo> roomWithMasterInfos = new java.util.ArrayList<>(Collections.emptyList());
         for (Room room : rooms) {
-            RoomDetailInfo addR = roomEnrollmentRepository.getMasterUser(room);
-            roomDetailInfos.add(addR);
+            RoomWithMasterInfo roomWithMasterInfo = roomEnrollmentRepository.getRoomMasterInfo(room);
+            roomWithMasterInfos.add(roomWithMasterInfo);
         }
-        return roomDetailInfos;
+        return roomWithMasterInfos;
     }
 
     @Transactional
@@ -114,13 +122,11 @@ public class RoomServiceImpl implements RoomService {
     }
 
     @Transactional
-    public List<RoomResponse> findByTagName(String tagName) {
+    public List<RoomResponse> findByTagName(String tagName, Long userId) {
         List<Room> rooms = roomRepository.findByTagName(tagName);
-        if (rooms.isEmpty()) {
-            throw new RoomNotFoundException(tagName);
-        }
+        checkIsEmptyRoom(tagName, rooms);
         List<RoomDetailInfo> roomDetailInfos = rooms.stream()
-                .map(roomEnrollmentRepository::getMasterUser)
+                .map(room -> roomEnrollmentRepository.getRoomDetailInfo(room, userId))
                 .collect(Collectors.toList());
 
         return RoomResponse.listFrom(roomDetailInfos);
