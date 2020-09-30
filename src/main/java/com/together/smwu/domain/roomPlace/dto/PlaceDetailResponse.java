@@ -11,6 +11,7 @@ public class PlaceDetailResponse {
     private Place place;
     private Timestamp postTime;
     private String comment;
+    private AuthorResponse author;
 
     public PlaceDetailResponse() {
     }
@@ -21,6 +22,7 @@ public class PlaceDetailResponse {
         this.place = entity.getPlace();
         this.postTime = entity.getPostTime();
         this.comment = entity.getComment();
+        this.author = AuthorResponse.of(entity.getUser());
     }
 
     public Long getRoomPlaceId() {
@@ -41,5 +43,9 @@ public class PlaceDetailResponse {
 
     public String getComment() {
         return comment;
+    }
+
+    public AuthorResponse getAuthor() {
+        return author;
     }
 }

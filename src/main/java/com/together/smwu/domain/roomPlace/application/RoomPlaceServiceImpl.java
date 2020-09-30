@@ -44,6 +44,7 @@ public class RoomPlaceServiceImpl implements RoomPlaceService {
                 .room(room)
                 .place(place)
                 .comment(request.getComment())
+                .user(user)
                 .build();
         roomPlaceRepository.save(roomPlace);
         return roomPlace.getId();

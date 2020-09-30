@@ -2,6 +2,7 @@ package com.together.smwu.domain.roomPlace.domain;
 
 import com.together.smwu.domain.place.domain.Place;
 import com.together.smwu.domain.room.domain.Room;
+import com.together.smwu.domain.user.domain.User;
 import lombok.Builder;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
@@ -30,6 +31,10 @@ public class RoomPlace {
     @JoinColumn(name = "place_id", nullable = false)
     private Place place;
 
+    @ManyToOne
+    @JoinColumn(name = "user_id", referencedColumnName = "id", nullable = false)
+    private User user;
+
     private String comment;
 
     @CreationTimestamp
@@ -37,10 +42,11 @@ public class RoomPlace {
     Timestamp postTime;
 
     @Builder
-    public RoomPlace(Room room, Place place, String comment) {
+    public RoomPlace(Room room, Place place, String comment, User user) {
         this.room = room;
         this.place = place;
         this.comment = comment;
+        this.user = user;
     }
 
     public Long getId() {
@@ -61,5 +67,9 @@ public class RoomPlace {
 
     public Timestamp getPostTime() {
         return postTime;
+    }
+
+    public User getUser() {
+        return user;
     }
 }
