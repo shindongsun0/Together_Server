@@ -77,7 +77,7 @@ public class RoomPlaceController {
     }
 
     @ApiOperation(value = "Room에 속한 모든 Place삭제")
-    @DeleteMapping("/{roomId}")
+    @DeleteMapping("/all/{roomId}")
     public ResponseEntity<Void> deleteAllPlaces(
             @ApiParam(value = "roomId", required = true) @PathVariable Long roomId,
             @CurrentUser User user) {
