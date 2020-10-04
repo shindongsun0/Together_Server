@@ -15,8 +15,8 @@ import com.together.smwu.domain.roomPlace.dto.RoomPlaceResponse;
 import com.together.smwu.domain.roomPlace.exception.RoomPlaceNotFoundException;
 import com.together.smwu.domain.user.domain.User;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import javax.transaction.Transactional;
 import java.util.List;
 import java.util.stream.Collectors;
 
