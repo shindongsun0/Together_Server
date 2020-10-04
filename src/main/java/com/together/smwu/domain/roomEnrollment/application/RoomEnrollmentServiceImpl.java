@@ -16,8 +16,8 @@ import com.together.smwu.domain.user.dao.UserRepository;
 import com.together.smwu.domain.user.domain.User;
 import com.together.smwu.domain.user.exception.UserNotFoundException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import javax.transaction.Transactional;
 import java.util.List;
 import java.util.stream.Collectors;
 
