@@ -12,4 +12,6 @@ public interface RoomPlaceRepository extends JpaRepository<RoomPlace, Long> {
     List<RoomPlace> findAllByRoom(Room room);
 
     List<RoomPlace> findAllByPlace(Place place);
+
+    void deleteByRoom(Room room);
 }

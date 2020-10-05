@@ -7,13 +7,14 @@ import com.together.smwu.domain.room.exception.RoomNotFoundException;
 import com.together.smwu.domain.roomEnrollment.dao.RoomEnrollmentRepository;
 import com.together.smwu.domain.roomEnrollment.domain.RoomEnrollment;
 import com.together.smwu.domain.roomEnrollment.exception.RoomUserMismatchException;
+import com.together.smwu.domain.roomPlace.dao.RoomPlaceRepository;
 import com.together.smwu.domain.user.dao.UserRepository;
 import com.together.smwu.domain.user.domain.User;
 import com.together.smwu.global.aws.S3Uploader;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.transaction.Transactional;
 import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
@@ -25,14 +26,16 @@ public class RoomServiceImpl implements RoomService {
     private final RoomRepository roomRepository;
     private final RoomEnrollmentRepository roomEnrollmentRepository;
     private final UserRepository userRepository;
+    private final RoomPlaceRepository roomPlaceRepository;
     private final S3Uploader s3Uploader;
     private static final String DEFAULT_ROOM_IMAGE = "https://together-user-thumbnail.s3.ap-northeast-2.amazonaws.com/static/default_roomImage.jpeg";
 
     public RoomServiceImpl(RoomRepository roomRepository, RoomEnrollmentRepository roomEnrollmentRepository,
-                           UserRepository userRepository, S3Uploader s3Uploader) {
+                           UserRepository userRepository, RoomPlaceRepository roomPlaceRepository, S3Uploader s3Uploader) {
         this.roomRepository = roomRepository;
         this.roomEnrollmentRepository = roomEnrollmentRepository;
         this.userRepository = userRepository;
+        this.roomPlaceRepository = roomPlaceRepository;
         this.s3Uploader = s3Uploader;
     }
 
@@ -117,6 +120,7 @@ public class RoomServiceImpl implements RoomService {
         RoomEnrollment roomEnrollment = roomEnrollmentRepository.findByUserAndRoom(user.getUserId(), roomId)
                 .orElseThrow(RoomUserMismatchException::new);
         if (roomEnrollment.getIsMaster()) {
+            roomPlaceRepository.deleteByRoom(authorizedRoom);
             roomRepository.deleteById(authorizedRoom.getId());
         }
     }

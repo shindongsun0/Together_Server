@@ -16,9 +16,9 @@ import com.together.smwu.domain.roomPlace.dao.RoomPlaceRepository;
 import com.together.smwu.domain.roomPlace.domain.RoomPlace;
 import com.together.smwu.global.aws.S3Uploader;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.transaction.Transactional;
 import java.io.IOException;
 import java.util.List;
 

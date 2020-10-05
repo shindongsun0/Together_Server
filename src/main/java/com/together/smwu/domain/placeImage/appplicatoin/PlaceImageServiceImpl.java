@@ -8,8 +8,8 @@ import com.together.smwu.domain.placeImage.domain.PlaceImage;
 import com.together.smwu.domain.placeImage.dto.PlaceImageRequest;
 import com.together.smwu.domain.placeImage.dto.PlaceImageResponse;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import javax.transaction.Transactional;
 import java.util.List;
 
 @Service
