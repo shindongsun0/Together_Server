@@ -34,6 +34,7 @@ configurations {
 repositories {
     mavenCentral()
     maven { url 'https://repo.spring.io/libs-milestone' }
+    maven { url 'https://jitpack.io' }
 }
 
 dependencies {
@@ -48,13 +49,17 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-security'
     implementation 'io.jsonwebtoken:jjwt:0.9.1'
     implementation 'net.rakugakibox.util:yaml-resource-bundle:1.1'
-
+    annotationProcessor group: 'org.springframework.boot', name: 'spring-boot-configuration-processor'
     implementation 'org.springframework.cloud:spring-cloud-starter-aws'
     compile 'pl.allegro.tech.boot:handlebars-spring-boot-starter:0.3.0'
+
+    // selenium
+    compile group: 'org.seleniumhq.selenium', name: 'selenium-java', version: '3.13.0'
 
     // querydsl
     compile 'com.querydsl:querydsl-apt'
     compile 'com.querydsl:querydsl-jpa'
+    compile('com.github.jojoldu.spring-batch-querydsl:spring-batch-querydsl-reader:2.3.3')
 
     testCompile 'com.querydsl:querydsl-apt'
     testCompile 'com.querydsl:querydsl-jpa'

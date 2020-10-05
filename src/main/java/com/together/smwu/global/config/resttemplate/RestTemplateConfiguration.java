@@ -21,7 +21,7 @@ public class RestTemplateConfiguration {
         return restTemplateBuilder.rootUri("http://localhost:8000")
                 .additionalInterceptors(new RestTemplateClientHttpRequestInterceptor())
                 .errorHandler(new RestTemplateErrorHandler())
-                .setConnectTimeout(Duration.ofMinutes(3)) //3분
+                .setConnectTimeout(Duration.ofSeconds(10)) //10
                 .build();
     }
 }
