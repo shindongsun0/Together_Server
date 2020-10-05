@@ -24,7 +24,7 @@ public class WebDriverConfiguration {
     public static ChromeConnector createChromeConnector() {
         System.setProperty("webdriver.chrome.driver", webDriverURL);
         ChromeOptions options = new ChromeOptions();
-        options.addArguments("--headless");
+//        options.addArguments("--headless");
         options.addArguments("--whitelisted-ips");
         options.addArguments("--no-sandbox");
         options.addArguments(

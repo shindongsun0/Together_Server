@@ -2,8 +2,10 @@ package com.together.smwu.global.crawler;
 
 import lombok.Getter;
 import org.openqa.selenium.By;
+import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
@@ -22,6 +24,11 @@ public class ChromeConnector {
         webDriver.get(pageLink);
     }
 
+    public WebElement getWebElementByXpath(String xpath) {
+        wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath(xpath)));
+        return webDriver.findElement(By.xpath(xpath));
+    }
+
     public void waitUntilByXpath(String xpath) {
         wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath(xpath)));
     }
@@ -38,8 +45,9 @@ public class ChromeConnector {
         return webDriver.findElement(By.tagName(tag));
     }
 
-    public void waitUntilClickable(WebElement element) {
+    public void clickWebElement(WebElement element) {
         wait.until(ExpectedConditions.elementToBeClickable(element));
+        element.click();
     }
 
     public WebElement findElementByClassName(String name) {
@@ -48,5 +56,15 @@ public class ChromeConnector {
 
     public String getCurrentUrl() {
         return webDriver.getCurrentUrl();
+    }
+
+    public void deleteCookies() {
+        webDriver.manage().deleteAllCookies();
+    }
+
+    public void clickElement(WebElement webElement) {
+        Actions action = new Actions(webDriver);
+        action.moveToElement(webElement).build().perform();
+        ((JavascriptExecutor) webDriver).executeScript("arguments[0].click();", webElement);
     }
 }
