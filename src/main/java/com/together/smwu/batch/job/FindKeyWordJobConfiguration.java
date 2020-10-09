@@ -1,10 +1,15 @@
 package com.together.smwu.batch.job;
 
 import com.together.smwu.batch.BatchHelper;
+import com.together.smwu.batch.processor.CountPlaceProcessor;
 import com.together.smwu.batch.processor.NaverCrawlProcessor;
+import com.together.smwu.batch.reader.KeyWordPlaceReader;
 import com.together.smwu.batch.writer.NaverBatchWriter;
+import com.together.smwu.batch.writer.PlaceRankingWriter;
 import com.together.smwu.domain.crawl.domain.KeyWord;
+import com.together.smwu.domain.crawl.domain.KeyWordPlace;
 import com.together.smwu.domain.crawl.dto.NaverCrawlingResult;
+import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.batch.core.Job;
@@ -13,9 +18,9 @@ import org.springframework.batch.core.configuration.annotation.JobBuilderFactory
 import org.springframework.batch.core.configuration.annotation.JobScope;
 import org.springframework.batch.core.configuration.annotation.StepBuilderFactory;
 import org.springframework.batch.core.configuration.annotation.StepScope;
+import org.springframework.batch.item.ItemReader;
 import org.springframework.batch.item.database.JpaPagingItemReader;
 import org.springframework.batch.item.database.builder.JpaPagingItemReaderBuilder;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -27,11 +32,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+@RequiredArgsConstructor
 @Configuration
 public class FindKeyWordJobConfiguration {
     private static final Logger logger = LoggerFactory.getLogger(FindKeyWordJobConfiguration.class);
     private static final String JOB_NAME = "crawlingJob";
-    private static final String STEP_NAME = "crawlingStep";
+    private static final String CRAWLING_STEP = "crawlingStep";
+    private static final String COUNT_KEY_WORD_PLACE_STEP = "countKeyWordPlaceStep";
     private static final int CHUNK_SIZE = 2;
 
     private final JobBuilderFactory jobBuilderFactory;
@@ -39,29 +46,16 @@ public class FindKeyWordJobConfiguration {
     private final EntityManagerFactory entityManagerFactory;
     private final NaverCrawlProcessor naverBatchProcessor;
     private final NaverBatchWriter naverBatchWriter;
-    private final CreatedDateJobParameter jobParameter;
+    private final KeyWordPlaceReader keyWordPlaceReader;
+    private final CountPlaceProcessor countPlaceProcessor;
+    private final PlaceRankingWriter placeRankingWriter;
 
-    @Autowired
-    public FindKeyWordJobConfiguration(JobBuilderFactory jobBuilderFactory, StepBuilderFactory stepBuilderFactory,
-                                       EntityManagerFactory entityManagerFactory, NaverCrawlProcessor naverBatchProcessor, NaverBatchWriter naverBatchWriter, CreatedDateJobParameter jobParameter) {
-        this.jobBuilderFactory = jobBuilderFactory;
-        this.stepBuilderFactory = stepBuilderFactory;
-        this.entityManagerFactory = entityManagerFactory;
-        this.naverBatchProcessor = naverBatchProcessor;
-        this.naverBatchWriter = naverBatchWriter;
-        this.jobParameter = jobParameter;
-    }
 
     @Bean(JOB_NAME + "jobParameter")
     @JobScope
     public CreatedDateJobParameter jobParameter(@Value("#{jobParameters[createdDate]}") String createdDateStr) {
         return new CreatedDateJobParameter(createdDateStr);
     }
-//    @Bean
-//    @JobScope
-//    public QuerydslPagingItemReaderJobParameter jobParameter() {
-//        return new QuerydslPagingItemReaderJobParameter();
-//    }
 
     @Bean
     public CronTriggerFactoryBean findKeyWordJobTrigger() {
@@ -83,12 +77,12 @@ public class FindKeyWordJobConfiguration {
     public Job crawlingJob() {
         return jobBuilderFactory.get(JOB_NAME)
                 .start(CrawlingStep())
-//                .next(findLocationOfKeyWordPlace)
+                .next(CountKeyWordPlaceStep())
                 .build();
     }
 
-    private Step CrawlingStep() {
-        return stepBuilderFactory.get(STEP_NAME)
+    private Step CrawlingStep() { //TODO KeyWord의 latestAuthor?면 일단 pass하는 크롤링 logic 추가
+        return stepBuilderFactory.get(CRAWLING_STEP)
                 .<KeyWord, List<NaverCrawlingResult>>chunk(CHUNK_SIZE)
                 .reader(keyWordReader())
                 .processor(naverBatchProcessor)
@@ -96,19 +90,21 @@ public class FindKeyWordJobConfiguration {
                 .build();
     }
 
-    @Bean(name = JOB_NAME + "_reader")
-    @StepScope
-    public JpaPagingItemReader<KeyWord> keyWordReader() {
-        Map<String, Object> params = new HashMap<>();
-        params.put("createDateTime", jobParameter.getCreatedDate());
-        logger.info(">>>>>>>>>>> createdDateTime={}", jobParameter.getCreatedDate());
+    private Step CountKeyWordPlaceStep() {
+        return stepBuilderFactory.get(COUNT_KEY_WORD_PLACE_STEP)
+                .<List<KeyWordPlace>, List<OverallKeyWordPlace>>chunk(CHUNK_SIZE)
+                .reader(keyWordPlaceReader)
+                .processor(countPlaceProcessor)
+                .writer(placeRankingWriter)
+                .build();
+    }
 
+    @Bean
+    public JpaPagingItemReader<KeyWord> keyWordReader() {
         return new JpaPagingItemReaderBuilder<KeyWord>()
-                .name(JOB_NAME + "_reader")
                 .entityManagerFactory(entityManagerFactory)
                 .pageSize(CHUNK_SIZE)
-                .queryString("SELECT k FROM KeyWord k WHERE k.createdDate = :order by keyword_id")
-                .parameterValues(params)
+                .queryString("SELECT k FROM KeyWord k order by keyword_id")
                 .build();
     }
 
