@@ -1,17 +1,15 @@
-package com.together.smwu.domain.crawl.dto;
+package com.together.smwu.domain.crawl.domain;
 
+import com.together.smwu.domain.crawl.dto.NaverCrawlingResult;
+import com.together.smwu.global.config.entity.BaseEntity;
 import lombok.Builder;
 
 import javax.persistence.*;
 
 @Entity
+@AttributeOverride(name = "id", column = @Column(name = "keyword_place_id"))
 @Table(name = "KEYWORD_PLACE")
-public class KeyWordPlace {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "keyword_place_id")
-    private Long id;
-
+public class KeyWordPlace extends BaseEntity {
     private String keyWord;
     private String name;
     private String location;
