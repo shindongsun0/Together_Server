@@ -1,6 +1,5 @@
 package com.together.smwu.domain.crawl.application;
 
-import com.together.smwu.domain.crawl.dao.NaverRepository;
 import com.together.smwu.domain.crawl.domain.KeyWord;
 import com.together.smwu.domain.crawl.dto.NaverCrawlingResult;
 import com.together.smwu.global.crawler.WebDriverConfiguration;
@@ -13,12 +12,10 @@ import static com.together.smwu.global.crawler.WebDriverConfiguration.createChro
 
 @Service
 public class NaverCrawlingService {
-    private final NaverRepository naverRepository;
     private final WebDriverConfiguration webDriverConfiguration;
 
     @Autowired
-    public NaverCrawlingService(NaverRepository naverRepository, WebDriverConfiguration webDriverConfiguration) {
-        this.naverRepository = naverRepository;
+    public NaverCrawlingService(WebDriverConfiguration webDriverConfiguration) {
         this.webDriverConfiguration = webDriverConfiguration;
     }
 
