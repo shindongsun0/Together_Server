@@ -1,11 +1,10 @@
 # Together Server
-2020 SMWU Graduation Project - 5AM
+2020 Together Project - 5AM
 
 ## 시현 영상
 https://www.youtube.com/watch?v=bjG2bpmvjdY&feature=youtu.be
 
 ##
-![image](https://user-images.githubusercontent.com/52663248/95029374-be4c9e80-06e2-11eb-8bce-1f12931f24e4.png)
 ![image](https://user-images.githubusercontent.com/52663248/95029380-c7d60680-06e2-11eb-8bb4-da7cfb1ea296.png)
 ![image](https://user-images.githubusercontent.com/52663248/95029389-d0c6d800-06e2-11eb-8480-8bd91b754733.png)
 ![image](https://user-images.githubusercontent.com/52663248/95029390-d3c1c880-06e2-11eb-99ca-c4f2148b6316.png)
