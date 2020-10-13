@@ -1,9 +1,6 @@
 # Together Server
 2020 Together Project - 5AM
 
-## 시현 영상
-https://www.youtube.com/watch?v=bjG2bpmvjdY&feature=youtu.be
-
 ##
 ![image](https://user-images.githubusercontent.com/52663248/95029380-c7d60680-06e2-11eb-8bb4-da7cfb1ea296.png)
 ![image](https://user-images.githubusercontent.com/52663248/95029389-d0c6d800-06e2-11eb-8480-8bd91b754733.png)
@@ -22,3 +19,6 @@ https://www.youtube.com/watch?v=bjG2bpmvjdY&feature=youtu.be
 ![image](https://user-images.githubusercontent.com/52663248/95029409-f3f18780-06e2-11eb-987c-c1524cc28a9e.png)
 ![image](https://user-images.githubusercontent.com/52663248/95029412-f653e180-06e2-11eb-8399-7491abb0a451.png)
 ![image](https://user-images.githubusercontent.com/52663248/95029415-f9e76880-06e2-11eb-9237-2c4f1af7d569.png)
+
+## 시현 영상
+https://www.youtube.com/watch?v=bjG2bpmvjdY&feature=youtu.be
