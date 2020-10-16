@@ -6,7 +6,6 @@ import lombok.NoArgsConstructor;
 import javax.persistence.*;
 
 @Entity
-@Builder
 @NoArgsConstructor
 @Table(name = "KEYWORD")
 public class KeyWord {
@@ -15,11 +14,18 @@ public class KeyWord {
     @Column(name = "keyword_id")
     private Long id;
 
-    @Column(nullable = false)
+    @Column(name = "name", nullable = false)
     private String name;
 
     @Column(name = "latest_author", nullable = false)
     private String latestAuthor;
+
+    @Builder
+    public KeyWord(Long id, String name, String latestAuthor) {
+        this.id = id;
+        this.name = name;
+        this.latestAuthor = latestAuthor;
+    }
 
     public Long getId() {
         return this.id;
@@ -33,7 +39,7 @@ public class KeyWord {
         return this.latestAuthor;
     }
 
-    public void setLatestAuthor(String latestAuthor){
+    public void setLatestAuthor(String latestAuthor) {
         this.latestAuthor = latestAuthor;
     }
 }
