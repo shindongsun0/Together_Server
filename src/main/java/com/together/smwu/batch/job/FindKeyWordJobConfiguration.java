@@ -1,13 +1,14 @@
 package com.together.smwu.batch.job;
 
 import com.together.smwu.batch.BatchHelper;
-import com.together.smwu.batch.processor.CountPlaceProcessor;
+import com.together.smwu.batch.config.JpaItemListWriter;
+import com.together.smwu.batch.processor.CountKeyWordPlaceProcessor;
 import com.together.smwu.batch.processor.NaverCrawlProcessor;
 import com.together.smwu.batch.reader.KeyWordPlaceReader;
 import com.together.smwu.batch.writer.NaverBatchWriter;
-import com.together.smwu.batch.writer.PlaceRankingWriter;
 import com.together.smwu.domain.crawl.domain.KeyWord;
 import com.together.smwu.domain.crawl.domain.KeyWordPlace;
+import com.together.smwu.domain.crawl.domain.KeyWordPlaceCount;
 import com.together.smwu.domain.crawl.dto.NaverCrawlingResult;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
@@ -17,8 +18,7 @@ import org.springframework.batch.core.Step;
 import org.springframework.batch.core.configuration.annotation.JobBuilderFactory;
 import org.springframework.batch.core.configuration.annotation.JobScope;
 import org.springframework.batch.core.configuration.annotation.StepBuilderFactory;
-import org.springframework.batch.core.configuration.annotation.StepScope;
-import org.springframework.batch.item.ItemReader;
+import org.springframework.batch.item.database.JpaItemWriter;
 import org.springframework.batch.item.database.JpaPagingItemReader;
 import org.springframework.batch.item.database.builder.JpaPagingItemReaderBuilder;
 import org.springframework.beans.factory.annotation.Value;
@@ -28,15 +28,13 @@ import org.springframework.scheduling.quartz.CronTriggerFactoryBean;
 import org.springframework.scheduling.quartz.JobDetailFactoryBean;
 
 import javax.persistence.EntityManagerFactory;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 @RequiredArgsConstructor
 @Configuration
 public class FindKeyWordJobConfiguration {
     private static final Logger logger = LoggerFactory.getLogger(FindKeyWordJobConfiguration.class);
-    private static final String JOB_NAME = "crawlingJob";
+    private static final String JOB_NAME = "findKeyWordJob";
     private static final String CRAWLING_STEP = "crawlingStep";
     private static final String COUNT_KEY_WORD_PLACE_STEP = "countKeyWordPlaceStep";
     private static final int CHUNK_SIZE = 2;
@@ -47,9 +45,7 @@ public class FindKeyWordJobConfiguration {
     private final NaverCrawlProcessor naverBatchProcessor;
     private final NaverBatchWriter naverBatchWriter;
     private final KeyWordPlaceReader keyWordPlaceReader;
-    private final CountPlaceProcessor countPlaceProcessor;
-    private final PlaceRankingWriter placeRankingWriter;
-
+    private final CountKeyWordPlaceProcessor countKeyWordPlaceProcessor;
 
     @Bean(JOB_NAME + "jobParameter")
     @JobScope
@@ -92,22 +88,30 @@ public class FindKeyWordJobConfiguration {
 
     private Step CountKeyWordPlaceStep() {
         return stepBuilderFactory.get(COUNT_KEY_WORD_PLACE_STEP)
-                .<List<KeyWordPlace>, List<OverallKeyWordPlace>>chunk(CHUNK_SIZE)
+                .<List<KeyWordPlace>, List<KeyWordPlaceCount>>chunk(CHUNK_SIZE)
                 .reader(keyWordPlaceReader)
-                .processor(countPlaceProcessor)
-                .writer(placeRankingWriter)
+                .processor(countKeyWordPlaceProcessor)
+                .writer(writerList())
                 .build();
     }
 
     @Bean
     public JpaPagingItemReader<KeyWord> keyWordReader() {
         return new JpaPagingItemReaderBuilder<KeyWord>()
+                .name(JOB_NAME + "_reader")
                 .entityManagerFactory(entityManagerFactory)
                 .pageSize(CHUNK_SIZE)
-                .queryString("SELECT k FROM KeyWord k order by keyword_id")
+                .queryString("SELECT k FROM KeyWord k")
+                .saveState(false)
                 .build();
     }
 
+    private JpaItemListWriter<KeyWordPlaceCount> writerList() {
+        JpaItemWriter<KeyWordPlaceCount> writer = new JpaItemWriter<>();
+        writer.setEntityManagerFactory(entityManagerFactory);
+
+        return new JpaItemListWriter<>(writer);
+    }
 //    @Bean
 //    @StepScope
 //    public QuerydslPagingItemReader<Place> findKeyWordReader() {
